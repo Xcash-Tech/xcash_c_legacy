@@ -1,0 +1,11 @@
+name: XcashC
+description: monero_c xcash bindings
+output: 'lib/src/generated_bindings_xcash.g.dart'
+headers:
+  entry-points:
+    - '../../xcash_libwallet2_api_c/src/main/cpp/wallet2_api_c.h'
+
+exclude-all-by-default: true
+functions:
+  include:
+    - "XCASH_.+"

@@ -20,14 +20,14 @@ set -e
 repo=$1
 if [[ "x$repo" == "x" ]];
 then
-    echo "Usage: $0 monero/wownero $(gcc -dumpmachine) -j$proccount"
+    echo "Usage: $0 monero/wownero/xcash $(gcc -dumpmachine) -j$proccount"
     exit 1
 fi
 
-if [[ "x$repo" != "xwownero" && "x$repo" != "xmonero" ]];
+if [[ "x$repo" != "xwownero" && "x$repo" != "xmonero" && "x$repo" != "xxcash" ]];
 then
-    echo "Usage: $0 monero/wownero $(gcc -dumpmachine) -j$proccount"
-    echo "Invalid target given, only monero and wownero are supported targets"
+    echo "Usage: $0 monero/wownero/xcash $(gcc -dumpmachine) -j$proccount"
+    echo "Invalid target given, only monero, wownero or xcash are supported targets"
 fi
 
 if [[ ! -d "$repo" ]]
@@ -40,7 +40,7 @@ fi
 HOST_ABI="$2"
 if [[ "x$HOST_ABI" == "x" ]];
 then
-    echo "Usage: $0 monero/wownero $(gcc -dumpmachine) -j$proccount"
+    echo "Usage: $0 monero/wownero/xcash $(gcc -dumpmachine) -j$proccount"
     exit 1
 fi
 
@@ -48,7 +48,7 @@ NPROC="$3"
 
 if [[ "x$NPROC" == "x" ]];
 then
-    echo "Usage: $0 monero/wownero $(gcc -dumpmachine) -j$proccount"
+    echo "Usage: $0 monero/wownero/xcash $(gcc -dumpmachine) -j$proccount"
     exit 1
 fi
 cd $(dirname $0)
@@ -378,7 +378,7 @@ fi
 
 pushd ${repo}_libwallet2_api_c
     rm -rf build/${HOST_ABI} || true
-    mkdir -p build/${HOST_ABI} -p
+    mkdir -p build/${HOST_ABI}
     pushd build/${HOST_ABI}
         case $HOST_ABI in
             "x86_64-linux-gnu" | "i686-linux-gnu" | "i686-meego-linux-gnu" | "aarch64-linux-gnu" | "aarch64-meego-linux-gnu" | "i686-w64-mingw32" | "x86_64-w64-mingw32" | "x86_64-apple-darwin11" | "aarch64-apple-darwin11" | "host-apple-darwin" | "x86_64-host-apple-darwin" | "aarch64-host-apple-darwin")
