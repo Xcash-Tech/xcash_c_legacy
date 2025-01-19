@@ -25,7 +25,7 @@ library;
 //     required int subaddr_account,            /
 //     List<String> preferredInputs = const []}) {                 List<String> - gets joined and passed as 2 separate parameters to be split in the C side____
 //   debugStart?.call('XCASH_Wallet_createTransaction'); <------------- debugStart functions just marks the function as currently being executed, used        |
-//   lib ??= MoneroC(DynamicLibrary.open(libPath));                    \_for performance debugging                                                             |
+//   lib ??= XcashC(DynamicLibrary.open(libPath));                    \_for performance debugging                                                             |
 //   \_____________ Load the library in case it is not loaded                                                                                                  |
 //   final dst_addr_ = dst_addr.toNativeUtf8().cast<Char>(); -----------------| Cast the strings into Chars so it can be used as a parameter in a function     |
 //   final payment_id_ = payment_id.toNativeUtf8().cast<Char>(); -------------| generated via ffigen                                                           |
@@ -50,7 +50,7 @@ library;
 // Extra case is happening when we have a function call that returns const char* as we have to be memory safe
 // String PendingTransaction_txid(PendingTransaction ptr, String separator) {
 //   debugStart?.call('XCASH_PendingTransaction_txid');
-//   lib ??= MoneroC(DynamicLibrary.open(libPath));
+//   lib ??= XcashC(DynamicLibrary.open(libPath));
 //   final separator_ = separator.toNativeUtf8().cast<Char>();
 //   final txid = lib!.XCASH_PendingTransaction_txid(ptr, separator_);
 //   calloc.free(separator_);
@@ -81,7 +81,7 @@ export 'src/checksum_xcash.dart';
 
 typedef PendingTransaction = Pointer<Void>;
 
-MoneroC? lib;
+XcashC? lib;
 String libPath = (() {
   if (Platform.isWindows) return 'xcash_libwallet2_api_c.dll';
   if (Platform.isMacOS) return 'xcash_libwallet2_api_c.dylib';
@@ -138,14 +138,14 @@ void Function(String call, dynamic error)? errorHandler = (call, error) {
 
 int PendingTransaction_status(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_status');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_PendingTransaction_status(ptr);
   debugEnd?.call('XCASH_PendingTransaction_status');
   return status;
 }
 
 String PendingTransaction_errorString(PendingTransaction ptr) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   debugStart?.call('XCASH_PendingTransaction_errorString');
   try {
     final rPtr = lib!.XCASH_PendingTransaction_errorString(ptr).cast<Utf8>();
@@ -163,7 +163,7 @@ String PendingTransaction_errorString(PendingTransaction ptr) {
 bool PendingTransaction_commit(PendingTransaction ptr,
     {required String filename, required bool overwrite}) {
   debugStart?.call('XCASH_PendingTransaction_commit');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final result =
       lib!.XCASH_PendingTransaction_commit(ptr, filename_, overwrite);
@@ -175,7 +175,7 @@ bool PendingTransaction_commit(PendingTransaction ptr,
 String PendingTransaction_commitUR(
     PendingTransaction ptr, int max_fragment_length) {
   debugStart?.call('XCASH_PendingTransaction_commitUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid =
       lib!.XCASH_PendingTransaction_commitUR(ptr, max_fragment_length);
   debugEnd?.call('XCASH_PendingTransaction_commitUR');
@@ -194,7 +194,7 @@ String PendingTransaction_commitUR(
 
 int PendingTransaction_amount(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_amount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final amount = lib!.XCASH_PendingTransaction_amount(ptr);
   debugStart?.call('XCASH_PendingTransaction_amount');
   return amount;
@@ -203,7 +203,7 @@ int PendingTransaction_amount(PendingTransaction ptr) {
 int PendingTransaction_dust(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_dust');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final dust = lib!.XCASH_PendingTransaction_dust(ptr);
   debugStart?.call('XCASH_PendingTransaction_dust');
   return dust;
@@ -211,7 +211,7 @@ int PendingTransaction_dust(PendingTransaction ptr) {
 
 int PendingTransaction_fee(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_fee');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final fee = lib!.XCASH_PendingTransaction_fee(ptr);
   debugEnd?.call('XCASH_PendingTransaction_fee');
   return fee;
@@ -219,7 +219,7 @@ int PendingTransaction_fee(PendingTransaction ptr) {
 
 String PendingTransaction_txid(PendingTransaction ptr, String separator) {
   debugStart?.call('XCASH_PendingTransaction_txid');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final separator_ = separator.toNativeUtf8().cast<Char>();
   final txid = lib!.XCASH_PendingTransaction_txid(ptr, separator_);
   calloc.free(separator_);
@@ -239,7 +239,7 @@ String PendingTransaction_txid(PendingTransaction ptr, String separator) {
 
 int PendingTransaction_txCount(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_txCount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txCount = lib!.XCASH_PendingTransaction_txCount(ptr);
   debugEnd?.call('XCASH_PendingTransaction_txCount');
   return txCount;
@@ -248,7 +248,7 @@ int PendingTransaction_txCount(PendingTransaction ptr) {
 String PendingTransaction_subaddrAccount(
     PendingTransaction ptr, String separator) {
   debugStart?.call('XCASH_PendingTransaction_subaddrAccount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final separator_ = separator.toNativeUtf8().cast<Char>();
   final txid = lib!.XCASH_PendingTransaction_subaddrAccount(ptr, separator_);
   calloc.free(separator_);
@@ -269,7 +269,7 @@ String PendingTransaction_subaddrAccount(
 String PendingTransaction_subaddrIndices(
     PendingTransaction ptr, String separator) {
   debugStart?.call('XCASH_PendingTransaction_subaddrIndices');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final separator_ = separator.toNativeUtf8().cast<Char>();
   final txid = lib!.XCASH_PendingTransaction_subaddrIndices(ptr, separator_);
   calloc.free(separator_);
@@ -289,7 +289,7 @@ String PendingTransaction_subaddrIndices(
 
 String PendingTransaction_multisigSignData(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_multisigSignData');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid = lib!.XCASH_PendingTransaction_multisigSignData(ptr);
   debugEnd?.call('XCASH_PendingTransaction_multisigSignData');
   try {
@@ -307,7 +307,7 @@ String PendingTransaction_multisigSignData(PendingTransaction ptr) {
 
 void PendingTransaction_signMultisigTx(PendingTransaction ptr) {
   debugStart?.call('XCASH_PendingTransaction_signMultisigTx');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_PendingTransaction_signMultisigTx(ptr);
   debugEnd?.call('XCASH_PendingTransaction_signMultisigTx');
   return ret;
@@ -316,7 +316,7 @@ void PendingTransaction_signMultisigTx(PendingTransaction ptr) {
 String PendingTransaction_signersKeys(
     PendingTransaction ptr, String separator) {
   debugStart?.call('XCASH_PendingTransaction_signersKeys');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final separator_ = separator.toNativeUtf8().cast<Char>();
   final txid = lib!.XCASH_PendingTransaction_signersKeys(ptr, separator_);
   calloc.free(separator_);
@@ -336,7 +336,7 @@ String PendingTransaction_signersKeys(
 
 String PendingTransaction_hex(PendingTransaction ptr, String separator) {
   debugStart?.call('XCASH_PendingTransaction_hex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final separator_ = separator.toNativeUtf8().cast<Char>();
   final txid = lib!.XCASH_PendingTransaction_hex(ptr, separator_);
   calloc.free(separator_);
@@ -361,7 +361,7 @@ typedef UnsignedTransaction = Pointer<Void>;
 int UnsignedTransaction_status(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_status');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final dust = lib!.XCASH_UnsignedTransaction_status(ptr);
   debugStart?.call('XCASH_UnsignedTransaction_status');
   return dust;
@@ -370,7 +370,7 @@ int UnsignedTransaction_status(UnsignedTransaction ptr) {
 String UnsignedTransaction_errorString(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_errorString');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString = lib!.XCASH_UnsignedTransaction_errorString(ptr);
   try {
     final strPtr = errorString.cast<Utf8>();
@@ -388,7 +388,7 @@ String UnsignedTransaction_errorString(UnsignedTransaction ptr) {
 String UnsignedTransaction_amount(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_amount');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString =
       lib!.XCASH_UnsignedTransaction_amount(ptr, defaultSeparator);
   try {
@@ -407,7 +407,7 @@ String UnsignedTransaction_amount(UnsignedTransaction ptr) {
 String UnsignedTransaction_fee(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_fee');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString =
       lib!.XCASH_UnsignedTransaction_fee(ptr, defaultSeparator);
   try {
@@ -426,7 +426,7 @@ String UnsignedTransaction_fee(UnsignedTransaction ptr) {
 String UnsignedTransaction_mixin(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_mixin');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString =
       lib!.XCASH_UnsignedTransaction_mixin(ptr, defaultSeparator);
   try {
@@ -445,7 +445,7 @@ String UnsignedTransaction_mixin(UnsignedTransaction ptr) {
 String UnsignedTransaction_confirmationMessage(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_confirmationMessage');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString = lib!.XCASH_UnsignedTransaction_confirmationMessage(ptr);
   try {
     final strPtr = errorString.cast<Utf8>();
@@ -463,7 +463,7 @@ String UnsignedTransaction_confirmationMessage(UnsignedTransaction ptr) {
 String UnsignedTransaction_paymentId(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_paymentId');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString =
       lib!.XCASH_UnsignedTransaction_paymentId(ptr, defaultSeparator);
   try {
@@ -482,7 +482,7 @@ String UnsignedTransaction_paymentId(UnsignedTransaction ptr) {
 String UnsignedTransaction_recipientAddress(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_recipientAddress');
 
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final errorString =
       lib!.XCASH_UnsignedTransaction_recipientAddress(ptr, defaultSeparator);
   try {
@@ -500,7 +500,7 @@ String UnsignedTransaction_recipientAddress(UnsignedTransaction ptr) {
 
 int UnsignedTransaction_minMixinCount(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_minMixinCount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_UnsignedTransaction_minMixinCount(ptr);
   debugStart?.call('XCASH_UnsignedTransaction_minMixinCount');
   return v;
@@ -508,7 +508,7 @@ int UnsignedTransaction_minMixinCount(UnsignedTransaction ptr) {
 
 int UnsignedTransaction_txCount(UnsignedTransaction ptr) {
   debugStart?.call('XCASH_UnsignedTransaction_txCount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_UnsignedTransaction_txCount(ptr);
   debugStart?.call('XCASH_UnsignedTransaction_txCount');
   return v;
@@ -516,7 +516,7 @@ int UnsignedTransaction_txCount(UnsignedTransaction ptr) {
 
 bool UnsignedTransaction_sign(UnsignedTransaction ptr, String signedFileName) {
   debugStart?.call('XCASH_UnsignedTransaction_sign');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final signedFileName_ = signedFileName.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_UnsignedTransaction_sign(ptr, signedFileName_);
   calloc.free(signedFileName_);
@@ -527,7 +527,7 @@ bool UnsignedTransaction_sign(UnsignedTransaction ptr, String signedFileName) {
 String UnsignedTransaction_signUR(
     PendingTransaction ptr, int max_fragment_length) {
   debugStart?.call('XCASH_UnsignedTransaction_signUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid = lib!.XCASH_UnsignedTransaction_signUR(ptr, max_fragment_length);
   debugEnd?.call('XCASH_UnsignedTransaction_signUR');
   try {
@@ -551,7 +551,7 @@ enum TransactionInfo_Direction { In, Out }
 
 TransactionInfo_Direction TransactionInfo_direction(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_direction');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final tiDir = TransactionInfo_Direction
       .values[lib!.XCASH_TransactionInfo_direction(ptr)];
   debugEnd?.call('XCASH_TransactionInfo_direction');
@@ -560,7 +560,7 @@ TransactionInfo_Direction TransactionInfo_direction(TransactionInfo ptr) {
 
 bool TransactionInfo_isPending(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_isPending');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final isPending = lib!.XCASH_TransactionInfo_isPending(ptr);
   debugEnd?.call('XCASH_TransactionInfo_isPending');
 
@@ -569,7 +569,7 @@ bool TransactionInfo_isPending(TransactionInfo ptr) {
 
 bool TransactionInfo_isFailed(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_isFailed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final isFailed = lib!.XCASH_TransactionInfo_isFailed(ptr);
   debugEnd?.call('XCASH_TransactionInfo_isFailed');
   return isFailed;
@@ -577,7 +577,7 @@ bool TransactionInfo_isFailed(TransactionInfo ptr) {
 
 bool TransactionInfo_isCoinbase(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_isCoinbase');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final isCoinbase = lib!.XCASH_TransactionInfo_isCoinbase(ptr);
   debugEnd?.call('XCASH_TransactionInfo_isCoinbase');
   return isCoinbase;
@@ -585,7 +585,7 @@ bool TransactionInfo_isCoinbase(TransactionInfo ptr) {
 
 int TransactionInfo_amount(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_amount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final amount = lib!.XCASH_TransactionInfo_amount(ptr);
   debugEnd?.call('XCASH_TransactionInfo_amount');
   return amount;
@@ -593,7 +593,7 @@ int TransactionInfo_amount(TransactionInfo ptr) {
 
 int TransactionInfo_fee(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_fee');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final fee = lib!.XCASH_TransactionInfo_fee(ptr);
   debugEnd?.call('XCASH_TransactionInfo_fee');
   return fee;
@@ -601,7 +601,7 @@ int TransactionInfo_fee(TransactionInfo ptr) {
 
 int TransactionInfo_blockHeight(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_blockHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final blockHeight = lib!.XCASH_TransactionInfo_blockHeight(ptr);
   debugEnd?.call('XCASH_TransactionInfo_blockHeight');
   return blockHeight;
@@ -609,7 +609,7 @@ int TransactionInfo_blockHeight(TransactionInfo ptr) {
 
 String TransactionInfo_description(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_description');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_TransactionInfo_description(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -624,7 +624,7 @@ String TransactionInfo_description(TransactionInfo ptr) {
 
 String TransactionInfo_subaddrIndex(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_subaddrIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_TransactionInfo_subaddrIndex(ptr, defaultSeparator)
@@ -641,7 +641,7 @@ String TransactionInfo_subaddrIndex(TransactionInfo ptr) {
 
 int TransactionInfo_subaddrAccount(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_subaddrAccount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final subaddrAccount = lib!.XCASH_TransactionInfo_subaddrAccount(ptr);
   debugEnd?.call('XCASH_TransactionInfo_subaddrAccount');
   return subaddrAccount;
@@ -649,7 +649,7 @@ int TransactionInfo_subaddrAccount(TransactionInfo ptr) {
 
 String TransactionInfo_label(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_label');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_TransactionInfo_label(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -665,7 +665,7 @@ String TransactionInfo_label(TransactionInfo ptr) {
 
 int TransactionInfo_confirmations(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_confirmations');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final confirmations = lib!.XCASH_TransactionInfo_confirmations(ptr);
   debugEnd?.call('XCASH_TransactionInfo_confirmations');
   return confirmations;
@@ -673,7 +673,7 @@ int TransactionInfo_confirmations(TransactionInfo ptr) {
 
 int TransactionInfo_unlockTime(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_unlockTime');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final unlockTime = lib!.XCASH_TransactionInfo_unlockTime(ptr);
   debugEnd?.call('XCASH_TransactionInfo_unlockTime');
   return unlockTime;
@@ -681,7 +681,7 @@ int TransactionInfo_unlockTime(TransactionInfo ptr) {
 
 String TransactionInfo_hash(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_hash');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_TransactionInfo_hash(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -697,7 +697,7 @@ String TransactionInfo_hash(TransactionInfo ptr) {
 
 int TransactionInfo_timestamp(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_timestamp');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final timestamp = lib!.XCASH_TransactionInfo_timestamp(ptr);
   debugEnd?.call('XCASH_TransactionInfo_timestamp');
   return timestamp;
@@ -705,7 +705,7 @@ int TransactionInfo_timestamp(TransactionInfo ptr) {
 
 String TransactionInfo_paymentId(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_paymentId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_TransactionInfo_paymentId(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -721,7 +721,7 @@ String TransactionInfo_paymentId(TransactionInfo ptr) {
 
 int TransactionInfo_transfers_count(TransactionInfo ptr) {
   debugStart?.call('XCASH_TransactionInfo_transfers_count');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_TransactionInfo_transfers_count(ptr);
   debugEnd?.call('XCASH_TransactionInfo_transfers_count');
   return v;
@@ -729,7 +729,7 @@ int TransactionInfo_transfers_count(TransactionInfo ptr) {
 
 int TransactionInfo_transfers_amount(TransactionInfo ptr, int index) {
   debugStart?.call('XCASH_TransactionInfo_transfers_amount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_TransactionInfo_transfers_amount(ptr, index);
   debugEnd?.call('XCASH_TransactionInfo_transfers_amount');
   return v;
@@ -737,7 +737,7 @@ int TransactionInfo_transfers_amount(TransactionInfo ptr, int index) {
 
 String TransactionInfo_transfers_address(TransactionInfo ptr, int index) {
   debugStart?.call('XCASH_TransactionInfo_transfers_address');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_TransactionInfo_transfers_address(ptr, index).cast<Utf8>();
@@ -758,7 +758,7 @@ typedef TransactionHistory = Pointer<Void>;
 
 int TransactionHistory_count(TransactionHistory txHistory_ptr) {
   debugStart?.call('XCASH_TransactionHistory_count');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final count = lib!.XCASH_TransactionHistory_count(txHistory_ptr);
   debugEnd?.call('XCASH_TransactionHistory_count');
   return count;
@@ -767,7 +767,7 @@ int TransactionHistory_count(TransactionHistory txHistory_ptr) {
 TransactionInfo TransactionHistory_transaction(TransactionHistory txHistory_ptr,
     {required int index}) {
   debugStart?.call('XCASH_TransactionHistory_transaction');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final transaction =
       lib!.XCASH_TransactionHistory_transaction(txHistory_ptr, index);
   debugEnd?.call('XCASH_TransactionHistory_transaction');
@@ -778,7 +778,7 @@ TransactionInfo TransactionHistory_transactionById(
     TransactionHistory txHistory_ptr,
     {required String txid}) {
   debugStart?.call('XCASH_TransactionHistory_transactionById');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid_ = txid.toNativeUtf8().cast<Char>();
   final transaction =
       lib!.XCASH_TransactionHistory_transactionById(txHistory_ptr, txid_);
@@ -788,14 +788,14 @@ TransactionInfo TransactionHistory_transactionById(
 }
 
 void TransactionHistory_refresh(TransactionHistory txHistory_ptr) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   return lib!.XCASH_TransactionHistory_refresh(txHistory_ptr);
 }
 
 void TransactionHistory_setTxNote(TransactionHistory txHistory_ptr,
     {required String txid, required String note}) {
   debugStart?.call('XCASH_TransactionHistory_setTxNote');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid_ = txid.toNativeUtf8().cast<Char>();
   final note_ = note.toNativeUtf8().cast<Char>();
   final s =
@@ -812,7 +812,7 @@ typedef AddressBookRow = Pointer<Void>;
 
 String AddressBookRow_extra(AddressBookRow addressBookRow_ptr) {
   debugStart?.call('XCASH_AddressBookRow_extra');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_AddressBookRow_extra(addressBookRow_ptr).cast<Utf8>();
@@ -829,7 +829,7 @@ String AddressBookRow_extra(AddressBookRow addressBookRow_ptr) {
 
 String AddressBookRow_getAddress(AddressBookRow addressBookRow_ptr) {
   debugStart?.call('XCASH_AddressBookRow_getAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_AddressBookRow_getAddress(addressBookRow_ptr).cast<Utf8>();
@@ -846,7 +846,7 @@ String AddressBookRow_getAddress(AddressBookRow addressBookRow_ptr) {
 
 String AddressBookRow_getDescription(AddressBookRow addressBookRow_ptr) {
   debugStart?.call('XCASH_AddressBookRow_getDescription');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_AddressBookRow_getDescription(addressBookRow_ptr)
@@ -864,7 +864,7 @@ String AddressBookRow_getDescription(AddressBookRow addressBookRow_ptr) {
 
 String AddressBookRow_getPaymentId(AddressBookRow addressBookRow_ptr) {
   debugStart?.call('XCASH_AddressBookRow_getPaymentId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_AddressBookRow_getPaymentId(addressBookRow_ptr)
@@ -882,7 +882,7 @@ String AddressBookRow_getPaymentId(AddressBookRow addressBookRow_ptr) {
 
 int AddressBookRow_getRowId(AddressBookRow addressBookRow_ptr) {
   debugStart?.call('XCASH_AddressBookRow_getRowId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBookRow_getRowId(addressBookRow_ptr);
   debugEnd?.call('XCASH_AddressBookRow_getRowId');
   return v;
@@ -894,7 +894,7 @@ typedef AddressBook = Pointer<Void>;
 
 int AddressBook_getAll_size(AddressBook addressBook_ptr) {
   debugStart?.call('XCASH_AddressBook_getAll_size');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBook_getAll_size(addressBook_ptr);
   debugEnd?.call('XCASH_AddressBook_getAll_size');
   return v;
@@ -903,7 +903,7 @@ int AddressBook_getAll_size(AddressBook addressBook_ptr) {
 AddressBookRow AddressBook_getAll_byIndex(AddressBook addressBook_ptr,
     {required int index}) {
   debugStart?.call('XCASH_AddressBook_getAll_byIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBook_getAll_byIndex(addressBook_ptr, index);
   debugEnd?.call('XCASH_AddressBook_getAll_byIndex');
   return v;
@@ -916,7 +916,7 @@ bool AddressBook_addRow(
   required String description,
 }) {
   debugStart?.call('XCASH_AddressBook_addRow');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final dst_addr_ = dstAddr.toNativeUtf8().cast<Char>();
   final payment_id_ = paymentId.toNativeUtf8().cast<Char>();
   final description_ = description.toNativeUtf8().cast<Char>();
@@ -931,7 +931,7 @@ bool AddressBook_addRow(
 
 bool AddressBook_deleteRow(AddressBook addressBook_ptr, {required int rowId}) {
   debugStart?.call('XCASH_AddressBook_deleteRow');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBook_deleteRow(addressBook_ptr, rowId);
   debugEnd?.call('XCASH_AddressBook_deleteRow');
   return v;
@@ -943,7 +943,7 @@ bool AddressBook_setDescription(
   required String description,
 }) {
   debugStart?.call('XCASH_AddressBook_setDescription');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final description_ = description.toNativeUtf8().cast<Char>();
   final v = lib!
       .XCASH_AddressBook_setDescription(addressBook_ptr, rowId, description_);
@@ -954,7 +954,7 @@ bool AddressBook_setDescription(
 
 void AddressBook_refresh(AddressBook addressBook_ptr) {
   debugStart?.call('XCASH_AddressBook_refresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBook_refresh(addressBook_ptr);
   debugEnd?.call('XCASH_AddressBook_refresh');
   return v;
@@ -962,7 +962,7 @@ void AddressBook_refresh(AddressBook addressBook_ptr) {
 
 int AddressBook_errorCode(AddressBook addressBook_ptr) {
   debugStart?.call('XCASH_AddressBook_errorCode');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_AddressBook_errorCode(addressBook_ptr);
   debugEnd?.call('XCASH_AddressBook_errorCode');
   return v;
@@ -971,7 +971,7 @@ int AddressBook_errorCode(AddressBook addressBook_ptr) {
 int AddressBook_lookupPaymentID(AddressBook addressBook_ptr,
     {required String paymentId}) {
   debugStart?.call('XCASH_AddressBook_lookupPaymentID');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final paymentId_ = paymentId.toNativeUtf8().cast<Char>();
   final v =
       lib!.XCASH_AddressBook_lookupPaymentID(addressBook_ptr, paymentId_);
@@ -985,7 +985,7 @@ typedef CoinsInfo = Pointer<Void>;
 
 int CoinsInfo_blockHeight(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_blockHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_blockHeight(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_blockHeight');
   return v;
@@ -993,7 +993,7 @@ int CoinsInfo_blockHeight(CoinsInfo coinsInfo_ptr) {
 
 String CoinsInfo_hash(CoinsInfo addressBookRow_ptr) {
   debugStart?.call('XCASH_CoinsInfo_hash');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_CoinsInfo_hash(addressBookRow_ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1009,7 +1009,7 @@ String CoinsInfo_hash(CoinsInfo addressBookRow_ptr) {
 
 int CoinsInfo_internalOutputIndex(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_internalOutputIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_internalOutputIndex(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_internalOutputIndex');
   return v;
@@ -1017,7 +1017,7 @@ int CoinsInfo_internalOutputIndex(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_globalOutputIndex(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_globalOutputIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_globalOutputIndex(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_globalOutputIndex');
   return v;
@@ -1025,7 +1025,7 @@ int CoinsInfo_globalOutputIndex(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_spent(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_spent');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_spent(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_spent');
   return v;
@@ -1033,7 +1033,7 @@ bool CoinsInfo_spent(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_frozen(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_frozen');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_frozen(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_frozen');
   return v;
@@ -1041,7 +1041,7 @@ bool CoinsInfo_frozen(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_spentHeight(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_spentHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_spentHeight(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_spentHeight');
   return v;
@@ -1049,7 +1049,7 @@ int CoinsInfo_spentHeight(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_amount(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_amount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_amount(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_amount');
   return v;
@@ -1057,7 +1057,7 @@ int CoinsInfo_amount(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_rct(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_rct');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_rct(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_rct');
   return v;
@@ -1065,7 +1065,7 @@ bool CoinsInfo_rct(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_keyImageKnown(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_keyImageKnown');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_keyImageKnown(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_keyImageKnown');
   return v;
@@ -1073,7 +1073,7 @@ bool CoinsInfo_keyImageKnown(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_pkIndex(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_pkIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_pkIndex(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_pkIndex');
   return v;
@@ -1081,7 +1081,7 @@ int CoinsInfo_pkIndex(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_subaddrIndex(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_subaddrIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_subaddrIndex(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_subaddrIndex');
   return v;
@@ -1089,7 +1089,7 @@ int CoinsInfo_subaddrIndex(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_subaddrAccount(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_subaddrAccount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_subaddrAccount(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_subaddrAccount');
   return v;
@@ -1097,7 +1097,7 @@ int CoinsInfo_subaddrAccount(CoinsInfo coinsInfo_ptr) {
 
 String CoinsInfo_address(CoinsInfo addressBookRow_ptr) {
   debugStart?.call('XCASH_CoinsInfo_address');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_CoinsInfo_address(addressBookRow_ptr).cast<Utf8>();
@@ -1114,7 +1114,7 @@ String CoinsInfo_address(CoinsInfo addressBookRow_ptr) {
 
 String CoinsInfo_addressLabel(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_addressLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_CoinsInfo_addressLabel(coinsInfo_ptr).cast<Utf8>();
@@ -1131,7 +1131,7 @@ String CoinsInfo_addressLabel(CoinsInfo coinsInfo_ptr) {
 
 String CoinsInfo_keyImage(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_keyImage');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_CoinsInfo_keyImage(coinsInfo_ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1147,7 +1147,7 @@ String CoinsInfo_keyImage(CoinsInfo coinsInfo_ptr) {
 
 int CoinsInfo_unlockTime(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_unlockTime');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_unlockTime(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_unlockTime');
   return v;
@@ -1155,7 +1155,7 @@ int CoinsInfo_unlockTime(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_unlocked(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_unlocked');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_unlocked(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_unlocked');
   return v;
@@ -1163,7 +1163,7 @@ bool CoinsInfo_unlocked(CoinsInfo coinsInfo_ptr) {
 
 String CoinsInfo_pubKey(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_pubKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_CoinsInfo_pubKey(coinsInfo_ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1179,7 +1179,7 @@ String CoinsInfo_pubKey(CoinsInfo coinsInfo_ptr) {
 
 bool CoinsInfo_coinbase(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_coinbase');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_CoinsInfo_coinbase(coinsInfo_ptr);
   debugEnd?.call('XCASH_CoinsInfo_coinbase');
   return v;
@@ -1187,7 +1187,7 @@ bool CoinsInfo_coinbase(CoinsInfo coinsInfo_ptr) {
 
 String CoinsInfo_description(CoinsInfo coinsInfo_ptr) {
   debugStart?.call('XCASH_CoinsInfo_description');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_CoinsInfo_description(coinsInfo_ptr).cast<Utf8>();
@@ -1206,7 +1206,7 @@ typedef Coins = Pointer<Void>;
 
 int Coins_count(Coins coins_ptr) {
   debugStart?.call('XCASH_Coins_count');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_count(coins_ptr);
   debugEnd?.call('XCASH_Coins_count');
   return v;
@@ -1214,7 +1214,7 @@ int Coins_count(Coins coins_ptr) {
 
 CoinsInfo Coins_coin(Coins coins_ptr, int index) {
   debugStart?.call('XCASH_Coins_coin');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_coin(coins_ptr, index);
   debugEnd?.call('XCASH_Coins_coin');
   return v;
@@ -1222,7 +1222,7 @@ CoinsInfo Coins_coin(Coins coins_ptr, int index) {
 
 int Coins_getAll_size(Coins coins_ptr) {
   debugStart?.call('XCASH_Coins_getAll_size');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_getAll_size(coins_ptr);
   debugEnd?.call('XCASH_Coins_getAll_size');
   return v;
@@ -1230,7 +1230,7 @@ int Coins_getAll_size(Coins coins_ptr) {
 
 CoinsInfo Coins_getAll_byIndex(Coins coins_ptr, int index) {
   debugStart?.call('XCASH_Coins_getAll_byIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_getAll_byIndex(coins_ptr, index);
   debugEnd?.call('XCASH_Coins_getAll_byIndex');
   return v;
@@ -1238,7 +1238,7 @@ CoinsInfo Coins_getAll_byIndex(Coins coins_ptr, int index) {
 
 void Coins_refresh(Coins coins_ptr) {
   debugStart?.call('XCASH_Coins_refresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_refresh(coins_ptr);
   debugEnd?.call('XCASH_Coins_refresh');
   return v;
@@ -1246,7 +1246,7 @@ void Coins_refresh(Coins coins_ptr) {
 
 void Coins_setFrozenByPublicKey(Coins coins_ptr, {required String publicKey}) {
   debugStart?.call('XCASH_Coins_setFrozenByPublicKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final publicKey_ = publicKey.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_Coins_setFrozenByPublicKey(coins_ptr, publicKey_);
   calloc.free(publicKey_);
@@ -1256,7 +1256,7 @@ void Coins_setFrozenByPublicKey(Coins coins_ptr, {required String publicKey}) {
 
 void Coins_setFrozen(Coins coins_ptr, {required int index}) {
   debugStart?.call('XCASH_Coins_setFrozen');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_setFrozen(coins_ptr, index);
   debugEnd?.call('XCASH_Coins_setFrozen');
   return v;
@@ -1264,7 +1264,7 @@ void Coins_setFrozen(Coins coins_ptr, {required int index}) {
 
 void Coins_thaw(Coins coins_ptr, {required int index}) {
   debugStart?.call('XCASH_Coins_thaw');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Coins_thaw(coins_ptr, index);
   debugEnd?.call('XCASH_Coins_thaw');
   return v;
@@ -1272,7 +1272,7 @@ void Coins_thaw(Coins coins_ptr, {required int index}) {
 
 void Coins_thawByPublicKey(Coins coins_ptr, {required String publicKey}) {
   debugStart?.call('XCASH_Coins_thawByPublicKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final publicKey_ = publicKey.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_Coins_thawByPublicKey(coins_ptr, publicKey_);
   calloc.free(publicKey_);
@@ -1286,7 +1286,7 @@ bool Coins_isTransferUnlocked(
   required int blockHeight,
 }) {
   debugStart?.call('XCASH_Coins_isTransferUnlocked');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v =
       lib!.XCASH_Coins_isTransferUnlocked(coins_ptr, unlockTime, blockHeight);
   debugEnd?.call('XCASH_Coins_isTransferUnlocked');
@@ -1299,7 +1299,7 @@ typedef SubaddressRow = Pointer<Void>;
 
 String SubaddressRow_extra(SubaddressRow subaddressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressRow_extra');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_SubaddressRow_extra(subaddressBookRow_ptr).cast<Utf8>();
@@ -1316,7 +1316,7 @@ String SubaddressRow_extra(SubaddressRow subaddressBookRow_ptr) {
 
 String SubaddressRow_getAddress(SubaddressRow subaddressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressRow_getAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_SubaddressRow_getAddress(subaddressBookRow_ptr)
@@ -1334,7 +1334,7 @@ String SubaddressRow_getAddress(SubaddressRow subaddressBookRow_ptr) {
 
 String SubaddressRow_getLabel(SubaddressRow subaddressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressRow_getLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_SubaddressRow_getLabel(subaddressBookRow_ptr).cast<Utf8>();
@@ -1351,7 +1351,7 @@ String SubaddressRow_getLabel(SubaddressRow subaddressBookRow_ptr) {
 
 int SubaddressRow_getRowId(SubaddressRow subaddressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressRow_getRowId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_SubaddressRow_getRowId(subaddressBookRow_ptr);
   debugEnd?.call('XCASH_SubaddressRow_getRowId');
   return status;
@@ -1363,7 +1363,7 @@ typedef Subaddress = Pointer<Void>;
 
 int Subaddress_getAll_size(SubaddressRow subaddressBookRow_ptr) {
   debugStart?.call('XCASH_Subaddress_getAll_size');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Subaddress_getAll_size(subaddressBookRow_ptr);
   debugEnd?.call('XCASH_Subaddress_getAll_size');
   return status;
@@ -1372,7 +1372,7 @@ int Subaddress_getAll_size(SubaddressRow subaddressBookRow_ptr) {
 SubaddressRow Subaddress_getAll_byIndex(Subaddress subaddressRow_ptr,
     {required int index}) {
   debugStart?.call('XCASH_Subaddress_getAll_byIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status =
       lib!.XCASH_Subaddress_getAll_byIndex(subaddressRow_ptr, index);
   debugEnd?.call('XCASH_Subaddress_getAll_byIndex');
@@ -1382,7 +1382,7 @@ SubaddressRow Subaddress_getAll_byIndex(Subaddress subaddressRow_ptr,
 void Subaddress_addRow(Subaddress ptr,
     {required int accountIndex, required String label}) {
   debugStart?.call('XCASH_Subaddress_addRow');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final label_ = label.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_Subaddress_addRow(ptr, accountIndex, label_);
   calloc.free(label_);
@@ -1395,7 +1395,7 @@ void Subaddress_setLabel(Subaddress ptr,
     required int addressIndex,
     required String label}) {
   debugStart?.call('XCASH_Subaddress_setLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final label_ = label.toNativeUtf8().cast<Char>();
   final status =
       lib!.XCASH_Subaddress_setLabel(ptr, accountIndex, addressIndex, label_);
@@ -1407,7 +1407,7 @@ void Subaddress_setLabel(Subaddress ptr,
 void Subaddress_refresh(Subaddress ptr,
     {required int accountIndex, required String label}) {
   debugStart?.call('XCASH_Subaddress_refresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final label_ = label.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_Subaddress_refresh(ptr, accountIndex);
   calloc.free(label_);
@@ -1419,7 +1419,7 @@ typedef SubaddressAccountRow = Pointer<Void>;
 
 String SubaddressAccountRow_extra(SubaddressAccountRow addressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_extra');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr =
         lib!.XCASH_SubaddressAccountRow_extra(addressBookRow_ptr).cast<Utf8>();
@@ -1437,7 +1437,7 @@ String SubaddressAccountRow_extra(SubaddressAccountRow addressBookRow_ptr) {
 String SubaddressAccountRow_getAddress(
     SubaddressAccountRow addressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_getAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_SubaddressAccountRow_getAddress(addressBookRow_ptr)
@@ -1455,7 +1455,7 @@ String SubaddressAccountRow_getAddress(
 
 String SubaddressAccountRow_getLabel(SubaddressAccountRow addressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_getLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_SubaddressAccountRow_getLabel(addressBookRow_ptr)
@@ -1474,7 +1474,7 @@ String SubaddressAccountRow_getLabel(SubaddressAccountRow addressBookRow_ptr) {
 String SubaddressAccountRow_getBalance(
     SubaddressAccountRow addressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_getBalance');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_SubaddressAccountRow_getBalance(addressBookRow_ptr)
@@ -1493,7 +1493,7 @@ String SubaddressAccountRow_getBalance(
 String SubaddressAccountRow_getUnlockedBalance(
     SubaddressAccountRow addressBookRow_ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_getUnlockedBalance');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_SubaddressAccountRow_getUnlockedBalance(addressBookRow_ptr)
@@ -1511,7 +1511,7 @@ String SubaddressAccountRow_getUnlockedBalance(
 
 int SubaddressAccountRow_getRowId(SubaddressAccountRow ptr) {
   debugStart?.call('XCASH_SubaddressAccountRow_getRowId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_SubaddressAccountRow_getRowId(ptr);
   debugEnd?.call('XCASH_SubaddressAccountRow_getRowId');
   return status;
@@ -1521,7 +1521,7 @@ typedef SubaddressAccount = Pointer<Void>;
 
 int SubaddressAccount_getAll_size(SubaddressAccount ptr) {
   debugStart?.call('XCASH_SubaddressAccount_getAll_size');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_SubaddressAccount_getAll_size(ptr);
   debugEnd?.call('XCASH_SubaddressAccount_getAll_size');
   return status;
@@ -1530,7 +1530,7 @@ int SubaddressAccount_getAll_size(SubaddressAccount ptr) {
 SubaddressAccountRow SubaddressAccount_getAll_byIndex(SubaddressAccount ptr,
     {required int index}) {
   debugStart?.call('XCASH_SubaddressAccount_getAll_byIndex');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_SubaddressAccount_getAll_byIndex(ptr, index);
   debugEnd?.call('XCASH_SubaddressAccount_getAll_byIndex');
   return status;
@@ -1538,7 +1538,7 @@ SubaddressAccountRow SubaddressAccount_getAll_byIndex(SubaddressAccount ptr,
 
 void SubaddressAccount_addRow(SubaddressAccount ptr, {required String label}) {
   debugStart?.call('XCASH_SubaddressAccount_addRow');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final label_ = label.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_SubaddressAccount_addRow(ptr, label_);
   calloc.free(label_);
@@ -1549,7 +1549,7 @@ void SubaddressAccount_addRow(SubaddressAccount ptr, {required String label}) {
 void SubaddressAccount_setLabel(SubaddressAccount ptr,
     {required int accountIndex, required String label}) {
   debugStart?.call('XCASH_SubaddressAccount_setLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final label_ = label.toNativeUtf8().cast<Char>();
   final status =
       lib!.XCASH_SubaddressAccount_setLabel(ptr, accountIndex, label_);
@@ -1560,7 +1560,7 @@ void SubaddressAccount_setLabel(SubaddressAccount ptr,
 
 void SubaddressAccount_refresh(SubaddressAccount ptr) {
   debugStart?.call('XCASH_SubaddressAccount_refresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_SubaddressAccount_refresh(ptr);
   debugEnd?.call('XCASH_SubaddressAccount_refresh');
   return status;
@@ -1572,7 +1572,7 @@ typedef MultisigState = Pointer<Void>;
 
 bool MultisigState_isMultisig(MultisigState ptr) {
   debugStart?.call('XCASH_MultisigState_isMultisig');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_MultisigState_isMultisig(ptr);
   debugEnd?.call('XCASH_MultisigState_isMultisig');
   return status;
@@ -1580,7 +1580,7 @@ bool MultisigState_isMultisig(MultisigState ptr) {
 
 bool MultisigState_isReady(MultisigState ptr) {
   debugStart?.call('XCASH_MultisigState_isReady');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_MultisigState_isReady(ptr);
   debugEnd?.call('XCASH_MultisigState_isReady');
   return status;
@@ -1588,7 +1588,7 @@ bool MultisigState_isReady(MultisigState ptr) {
 
 int MultisigState_threshold(MultisigState ptr) {
   debugStart?.call('XCASH_MultisigState_threshold');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_MultisigState_threshold(ptr);
   debugEnd?.call('XCASH_MultisigState_threshold');
   return status;
@@ -1596,7 +1596,7 @@ int MultisigState_threshold(MultisigState ptr) {
 
 int MultisigState_total(MultisigState ptr) {
   debugStart?.call('XCASH_MultisigState_total');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_MultisigState_total(ptr);
   debugEnd?.call('XCASH_MultisigState_total');
   return status;
@@ -1608,7 +1608,7 @@ typedef DeviceProgress = Pointer<Void>;
 
 bool DeviceProgress_progress(DeviceProgress ptr) {
   debugStart?.call('XCASH_DeviceProgress_progress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_DeviceProgress_progress(ptr);
   debugEnd?.call('XCASH_DeviceProgress_progress');
   return status;
@@ -1616,7 +1616,7 @@ bool DeviceProgress_progress(DeviceProgress ptr) {
 
 bool DeviceProgress_indeterminate(DeviceProgress ptr) {
   debugStart?.call('XCASH_DeviceProgress_indeterminate');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_DeviceProgress_indeterminate(ptr);
   debugEnd?.call('XCASH_DeviceProgress_indeterminate');
   return status;
@@ -1627,7 +1627,7 @@ typedef wallet = Pointer<Void>;
 
 String Wallet_seed(wallet ptr, {required String seedOffset}) {
   debugStart?.call('XCASH_Wallet_seed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final seedOffset_ = seedOffset.toNativeUtf8().cast<Char>();
     final strPtr = lib!.XCASH_Wallet_seed(ptr, seedOffset_).cast<Utf8>();
@@ -1645,7 +1645,7 @@ String Wallet_seed(wallet ptr, {required String seedOffset}) {
 
 String Wallet_getSeedLanguage(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getSeedLanguage');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_getSeedLanguage(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1661,7 +1661,7 @@ String Wallet_getSeedLanguage(wallet ptr) {
 
 void Wallet_setSeedLanguage(wallet ptr, {required String language}) {
   debugStart?.call('XCASH_Wallet_setSeedLanguage');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final language_ = language.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_Wallet_setSeedLanguage(ptr, language_);
   calloc.free(language_);
@@ -1671,7 +1671,7 @@ void Wallet_setSeedLanguage(wallet ptr, {required String language}) {
 
 int Wallet_status(wallet ptr) {
   debugStart?.call('XCASH_Wallet_status');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_status(ptr);
   debugEnd?.call('XCASH_Wallet_status');
   return status;
@@ -1679,7 +1679,7 @@ int Wallet_status(wallet ptr) {
 
 String Wallet_errorString(wallet ptr) {
   debugStart?.call('XCASH_Wallet_errorString');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_errorString(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1695,7 +1695,7 @@ String Wallet_errorString(wallet ptr) {
 
 bool Wallet_setPassword(wallet ptr, {required String password}) {
   debugStart?.call('XCASH_Wallet_setPassword');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final password_ = password.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_Wallet_setPassword(ptr, password_);
   calloc.free(password_);
@@ -1705,7 +1705,7 @@ bool Wallet_setPassword(wallet ptr, {required String password}) {
 
 String Wallet_getPassword(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getPassword');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_getPassword(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1721,7 +1721,7 @@ String Wallet_getPassword(wallet ptr) {
 
 bool Wallet_setDevicePin(wallet ptr, {required String passphrase}) {
   debugStart?.call('XCASH_Wallet_setDevicePin');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final passphrase_ = passphrase.toNativeUtf8().cast<Char>();
   final status = lib!.XCASH_Wallet_setDevicePin(ptr, passphrase_);
   calloc.free(passphrase_);
@@ -1732,7 +1732,7 @@ bool Wallet_setDevicePin(wallet ptr, {required String passphrase}) {
 String Wallet_address(wallet ptr,
     {int accountIndex = 0, int addressIndex = 0}) {
   debugStart?.call('XCASH_Wallet_address');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_Wallet_address(ptr, accountIndex, addressIndex)
@@ -1750,7 +1750,7 @@ String Wallet_address(wallet ptr,
 
 String Wallet_path(wallet ptr) {
   debugStart?.call('XCASH_Wallet_path');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_path(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1766,7 +1766,7 @@ String Wallet_path(wallet ptr) {
 
 int Wallet_nettype(wallet ptr) {
   debugStart?.call('XCASH_Wallet_nettype');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_nettype(ptr);
   debugEnd?.call('XCASH_Wallet_nettype');
   return status;
@@ -1778,7 +1778,7 @@ int Wallet_useForkRules(
   required int earlyBlocks,
 }) {
   debugStart?.call('XCASH_Wallet_useForkRules');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_useForkRules(ptr, version, earlyBlocks);
   debugEnd?.call('XCASH_Wallet_useForkRules');
   return status;
@@ -1786,7 +1786,7 @@ int Wallet_useForkRules(
 
 String Wallet_integratedAddress(wallet ptr, {required String paymentId}) {
   debugStart?.call('XCASH_Wallet_integratedAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final paymentId_ = paymentId.toNativeUtf8().cast<Char>();
     final strPtr =
@@ -1805,7 +1805,7 @@ String Wallet_integratedAddress(wallet ptr, {required String paymentId}) {
 
 String Wallet_secretViewKey(wallet ptr) {
   debugStart?.call('XCASH_Wallet_secretViewKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_secretViewKey(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1821,7 +1821,7 @@ String Wallet_secretViewKey(wallet ptr) {
 
 String Wallet_publicViewKey(wallet ptr) {
   debugStart?.call('XCASH_Wallet_publicViewKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_publicViewKey(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1837,7 +1837,7 @@ String Wallet_publicViewKey(wallet ptr) {
 
 String Wallet_secretSpendKey(wallet ptr) {
   debugStart?.call('XCASH_Wallet_secretSpendKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_secretSpendKey(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1853,7 +1853,7 @@ String Wallet_secretSpendKey(wallet ptr) {
 
 String Wallet_publicSpendKey(wallet ptr) {
   debugStart?.call('XCASH_Wallet_publicSpendKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_publicSpendKey(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1869,7 +1869,7 @@ String Wallet_publicSpendKey(wallet ptr) {
 
 String Wallet_publicMultisigSignerKey(wallet ptr) {
   debugStart?.call('XCASH_Wallet_publicMultisigSignerKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_publicMultisigSignerKey(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1885,7 +1885,7 @@ String Wallet_publicMultisigSignerKey(wallet ptr) {
 
 void Wallet_stop(wallet ptr) {
   debugStart?.call('XCASH_Wallet_stop');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final stop = lib!.XCASH_Wallet_stop(ptr);
   debugEnd?.call('XCASH_Wallet_stop');
   return stop;
@@ -1893,7 +1893,7 @@ void Wallet_stop(wallet ptr) {
 
 bool Wallet_store(wallet ptr, {String path = ""}) {
   debugStart?.call('XCASH_Wallet_store');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_store(ptr, path_);
   calloc.free(path_);
@@ -1903,7 +1903,7 @@ bool Wallet_store(wallet ptr, {String path = ""}) {
 
 String Wallet_filename(wallet ptr) {
   debugStart?.call('XCASH_Wallet_filename');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_filename(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1919,7 +1919,7 @@ String Wallet_filename(wallet ptr) {
 
 String Wallet_keysFilename(wallet ptr) {
   debugStart?.call('XCASH_Wallet_keysFilename');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_keysFilename(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -1944,7 +1944,7 @@ bool Wallet_init(
   String proxyAddress = "",
 }) {
   debugStart?.call('XCASH_Wallet_init');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final daemonAddress_ = daemonAddress.toNativeUtf8().cast<Char>();
   final daemonUsername_ = daemonUsername.toNativeUtf8().cast<Char>();
   final daemonPassword_ = daemonPassword.toNativeUtf8().cast<Char>();
@@ -1974,7 +1974,7 @@ bool Wallet_createWatchOnly(
   required String language,
 }) {
   debugStart?.call('XCASH_Wallet_createWatchOnly');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final language_ = language.toNativeUtf8().cast<Char>();
@@ -1990,7 +1990,7 @@ bool Wallet_createWatchOnly(
 void Wallet_setRefreshFromBlockHeight(wallet ptr,
     {required int refresh_from_block_height}) {
   debugStart?.call('XCASH_Wallet_setRefreshFromBlockHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!
       .XCASH_Wallet_setRefreshFromBlockHeight(ptr, refresh_from_block_height);
   debugEnd?.call('XCASH_Wallet_setRefreshFromBlockHeight');
@@ -1999,7 +1999,7 @@ void Wallet_setRefreshFromBlockHeight(wallet ptr,
 
 int Wallet_getRefreshFromBlockHeight(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getRefreshFromBlockHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final getRefreshFromBlockHeight =
       lib!.XCASH_Wallet_getRefreshFromBlockHeight(ptr);
   debugEnd?.call('XCASH_Wallet_getRefreshFromBlockHeight');
@@ -2009,7 +2009,7 @@ int Wallet_getRefreshFromBlockHeight(wallet ptr) {
 void Wallet_setRecoveringFromSeed(wallet ptr,
     {required bool recoveringFromSeed}) {
   debugStart?.call('XCASH_Wallet_setRecoveringFromSeed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status =
       lib!.XCASH_Wallet_setRecoveringFromSeed(ptr, recoveringFromSeed);
   debugEnd?.call('XCASH_Wallet_setRecoveringFromSeed');
@@ -2019,7 +2019,7 @@ void Wallet_setRecoveringFromSeed(wallet ptr,
 void Wallet_setRecoveringFromDevice(wallet ptr,
     {required bool recoveringFromDevice}) {
   debugStart?.call('XCASH_Wallet_setRecoveringFromDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status =
       lib!.XCASH_Wallet_setRecoveringFromDevice(ptr, recoveringFromDevice);
   debugEnd?.call('XCASH_Wallet_setRecoveringFromDevice');
@@ -2029,7 +2029,7 @@ void Wallet_setRecoveringFromDevice(wallet ptr,
 void Wallet_setSubaddressLookahead(wallet ptr,
     {required int major, required int minor}) {
   debugStart?.call('XCASH_Wallet_setSubaddressLookahead');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_setSubaddressLookahead(ptr, major, minor);
   debugEnd?.call('XCASH_Wallet_setSubaddressLookahead');
   return status;
@@ -2037,7 +2037,7 @@ void Wallet_setSubaddressLookahead(wallet ptr,
 
 bool Wallet_connectToDaemon(wallet ptr) {
   debugStart?.call('XCASH_Wallet_connectToDaemon');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final connectToDaemon = lib!.XCASH_Wallet_connectToDaemon(ptr);
   debugEnd?.call('XCASH_Wallet_connectToDaemon');
   return connectToDaemon;
@@ -2045,7 +2045,7 @@ bool Wallet_connectToDaemon(wallet ptr) {
 
 int Wallet_connected(wallet ptr) {
   debugStart?.call('XCASH_Wallet_connected');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final connected = lib!.XCASH_Wallet_connected(ptr);
   debugEnd?.call('XCASH_Wallet_connected');
   return connected;
@@ -2053,7 +2053,7 @@ int Wallet_connected(wallet ptr) {
 
 void Wallet_setTrustedDaemon(wallet ptr, {required bool arg}) {
   debugStart?.call('XCASH_Wallet_setTrustedDaemon');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_setTrustedDaemon(ptr, arg);
   debugEnd?.call('XCASH_Wallet_setTrustedDaemon');
   return status;
@@ -2061,7 +2061,7 @@ void Wallet_setTrustedDaemon(wallet ptr, {required bool arg}) {
 
 bool Wallet_trustedDaemon(wallet ptr) {
   debugStart?.call('XCASH_Wallet_trustedDaemon');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final status = lib!.XCASH_Wallet_trustedDaemon(ptr);
   debugEnd?.call('XCASH_Wallet_trustedDaemon');
   return status;
@@ -2069,7 +2069,7 @@ bool Wallet_trustedDaemon(wallet ptr) {
 
 bool Wallet_setProxy(wallet ptr, {required String address}) {
   debugStart?.call('XCASH_Wallet_setProxy');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_setProxy(ptr, address_);
   calloc.free(address_);
@@ -2079,7 +2079,7 @@ bool Wallet_setProxy(wallet ptr, {required String address}) {
 
 int Wallet_balance(wallet ptr, {required int accountIndex}) {
   debugStart?.call('XCASH_Wallet_balance');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final balance = lib!.XCASH_Wallet_balance(ptr, accountIndex);
   debugEnd?.call('XCASH_Wallet_balance');
   return balance;
@@ -2087,7 +2087,7 @@ int Wallet_balance(wallet ptr, {required int accountIndex}) {
 
 int Wallet_unlockedBalance(wallet ptr, {required int accountIndex}) {
   debugStart?.call('XCASH_Wallet_unlockedBalance');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final unlockedBalance = lib!.XCASH_Wallet_unlockedBalance(ptr, accountIndex);
   debugEnd?.call('XCASH_Wallet_unlockedBalance');
   return unlockedBalance;
@@ -2095,7 +2095,7 @@ int Wallet_unlockedBalance(wallet ptr, {required int accountIndex}) {
 
 int Wallet_viewOnlyBalance(wallet ptr, {required int accountIndex}) {
   debugStart?.call('XCASH_Wallet_viewOnlyBalance');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final unlockedBalance = lib!.XCASH_Wallet_viewOnlyBalance(ptr, accountIndex);
   debugEnd?.call('XCASH_Wallet_viewOnlyBalance');
   return unlockedBalance;
@@ -2103,7 +2103,7 @@ int Wallet_viewOnlyBalance(wallet ptr, {required int accountIndex}) {
 
 bool Wallet_watchOnly(wallet ptr) {
   debugStart?.call('XCASH_Wallet_watchOnly');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final watchOnly = lib!.XCASH_Wallet_watchOnly(ptr);
   debugEnd?.call('XCASH_Wallet_watchOnly');
   return watchOnly;
@@ -2111,7 +2111,7 @@ bool Wallet_watchOnly(wallet ptr) {
 
 int Wallet_blockChainHeight(wallet ptr) {
   debugStart?.call('XCASH_Wallet_blockChainHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final blockChainHeight = lib!.XCASH_Wallet_blockChainHeight(ptr);
   debugEnd?.call('XCASH_Wallet_blockChainHeight');
   return blockChainHeight;
@@ -2119,7 +2119,7 @@ int Wallet_blockChainHeight(wallet ptr) {
 
 int Wallet_approximateBlockChainHeight(wallet ptr) {
   debugStart?.call('XCASH_Wallet_approximateBlockChainHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final approximateBlockChainHeight =
       lib!.XCASH_Wallet_approximateBlockChainHeight(ptr);
   debugEnd?.call('XCASH_Wallet_approximateBlockChainHeight');
@@ -2128,7 +2128,7 @@ int Wallet_approximateBlockChainHeight(wallet ptr) {
 
 int Wallet_estimateBlockChainHeight(wallet ptr) {
   debugStart?.call('XCASH_Wallet_estimateBlockChainHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final estimateBlockChainHeight =
       lib!.XCASH_Wallet_estimateBlockChainHeight(ptr);
   debugEnd?.call('XCASH_Wallet_estimateBlockChainHeight');
@@ -2137,7 +2137,7 @@ int Wallet_estimateBlockChainHeight(wallet ptr) {
 
 int Wallet_daemonBlockChainHeight(wallet ptr) {
   debugStart?.call('XCASH_Wallet_daemonBlockChainHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final daemonBlockChainHeight = lib!.XCASH_Wallet_daemonBlockChainHeight(ptr);
   debugEnd?.call('XCASH_Wallet_daemonBlockChainHeight');
   return daemonBlockChainHeight;
@@ -2145,7 +2145,7 @@ int Wallet_daemonBlockChainHeight(wallet ptr) {
 
 int Wallet_daemonBlockChainHeight_cached(wallet ptr) {
   debugStart?.call('XCASH_Wallet_daemonBlockChainHeight_cached');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final daemonBlockChainHeight =
       lib!.XCASH_Wallet_daemonBlockChainHeight_cached(ptr);
   debugEnd?.call('XCASH_Wallet_daemonBlockChainHeight_cached');
@@ -2154,7 +2154,7 @@ int Wallet_daemonBlockChainHeight_cached(wallet ptr) {
 
 void Wallet_daemonBlockChainHeight_runThread(wallet ptr, int seconds) {
   debugStart?.call('XCASH_Wallet_daemonBlockChainHeight_enableRefresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_daemonBlockChainHeight_runThread(ptr, seconds);
   debugEnd?.call('XCASH_Wallet_daemonBlockChainHeight_enableRefresh');
   return ret;
@@ -2162,7 +2162,7 @@ void Wallet_daemonBlockChainHeight_runThread(wallet ptr, int seconds) {
 
 bool Wallet_synchronized(wallet ptr) {
   debugStart?.call('XCASH_Wallet_synchronized');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final synchronized = lib!.XCASH_Wallet_synchronized(ptr);
   debugEnd?.call('XCASH_Wallet_synchronized');
   return synchronized;
@@ -2170,7 +2170,7 @@ bool Wallet_synchronized(wallet ptr) {
 
 String Wallet_displayAmount(int amount) {
   debugStart?.call('XCASH_Wallet_displayAmount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_displayAmount(amount).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -2186,7 +2186,7 @@ String Wallet_displayAmount(int amount) {
 
 int Wallet_amountFromString(String amount) {
   debugStart?.call('XCASH_Wallet_amountFromString');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final amount_ = amount.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_amountFromString(amount_);
@@ -2197,7 +2197,7 @@ int Wallet_amountFromString(String amount) {
 
 int Wallet_amountFromDouble(double amount) {
   debugStart?.call('XCASH_Wallet_amountFromDouble');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_Wallet_amountFromDouble(amount);
   debugEnd?.call('XCASH_Wallet_amountFromDouble');
@@ -2206,7 +2206,7 @@ int Wallet_amountFromDouble(double amount) {
 
 String Wallet_genPaymentId() {
   debugStart?.call('XCASH_Wallet_genPaymentId');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_genPaymentId().cast<Utf8>();
     final str = strPtr.toDartString();
@@ -2222,7 +2222,7 @@ String Wallet_genPaymentId() {
 
 bool Wallet_paymentIdValid(String paymentId) {
   debugStart?.call('XCASH_Wallet_paymentIdValid');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final paymentId_ = paymentId.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_paymentIdValid(paymentId_);
@@ -2233,7 +2233,7 @@ bool Wallet_paymentIdValid(String paymentId) {
 
 bool Wallet_addressValid(String address, int networkType) {
   debugStart?.call('XCASH_Wallet_addressValid');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_addressValid(address_, networkType);
@@ -2248,7 +2248,7 @@ bool Wallet_keyValid(
     required bool isViewKey,
     required int nettype}) {
   debugStart?.call('XCASH_Wallet_keyValid');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final secret_key_string_ = secret_key_string.toNativeUtf8().cast<Char>();
   final address_string_ = address_string.toNativeUtf8().cast<Char>();
@@ -2266,7 +2266,7 @@ String Wallet_keyValid_error(
     required bool isViewKey,
     required int nettype}) {
   debugStart?.call('XCASH_Wallet_keyValid_error');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final secret_key_string_ = secret_key_string.toNativeUtf8().cast<Char>();
     final address_string_ = address_string.toNativeUtf8().cast<Char>();
@@ -2289,7 +2289,7 @@ String Wallet_keyValid_error(
 String Wallet_paymentIdFromAddress(
     {required String strarg, required int nettype}) {
   debugStart?.call('XCASH_Wallet_paymentIdFromAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strarg_ = strarg.toNativeUtf8().cast<Char>();
     final strPtr =
@@ -2307,7 +2307,7 @@ String Wallet_paymentIdFromAddress(
 
 int Wallet_maximumAllowedAmount() {
   debugStart?.call('XCASH_Wallet_maximumAllowedAmount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_Wallet_maximumAllowedAmount();
   debugEnd?.call('XCASH_Wallet_maximumAllowedAmount');
@@ -2322,7 +2322,7 @@ void Wallet_init3(
   required bool console,
 }) {
   debugStart?.call('XCASH_Wallet_init3');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final argv0_ = argv0.toNativeUtf8().cast<Char>();
   final defaultLogBaseName_ = defaultLogBaseName.toNativeUtf8().cast<Char>();
@@ -2338,7 +2338,7 @@ void Wallet_init3(
 
 String Wallet_getPolyseed(wallet ptr, {required String passphrase}) {
   debugStart?.call('XCASH_Wallet_getPolyseed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final passphrase_ = passphrase.toNativeUtf8().cast<Char>();
     final strPtr =
@@ -2359,7 +2359,7 @@ String Wallet_createPolyseed({
   String language = "English",
 }) {
   debugStart?.call('XCASH_Wallet_createPolyseed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final language_ = language.toNativeUtf8();
     final strPtr =
@@ -2378,7 +2378,7 @@ String Wallet_createPolyseed({
 
 void Wallet_startRefresh(wallet ptr) {
   debugStart?.call('XCASH_Wallet_startRefresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final startRefresh = lib!.XCASH_Wallet_startRefresh(ptr);
   debugEnd?.call('XCASH_Wallet_startRefresh');
   return startRefresh;
@@ -2386,7 +2386,7 @@ void Wallet_startRefresh(wallet ptr) {
 
 void Wallet_pauseRefresh(wallet ptr) {
   debugStart?.call('XCASH_Wallet_pauseRefresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final pauseRefresh = lib!.XCASH_Wallet_pauseRefresh(ptr);
   debugEnd?.call('XCASH_Wallet_pauseRefresh');
   return pauseRefresh;
@@ -2394,7 +2394,7 @@ void Wallet_pauseRefresh(wallet ptr) {
 
 bool Wallet_refresh(wallet ptr) {
   debugStart?.call('XCASH_Wallet_refresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final refresh = lib!.XCASH_Wallet_refresh(ptr);
   debugEnd?.call('XCASH_Wallet_refresh');
   return refresh;
@@ -2402,7 +2402,7 @@ bool Wallet_refresh(wallet ptr) {
 
 void Wallet_refreshAsync(wallet ptr) {
   debugStart?.call('XCASH_Wallet_refreshAsync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final refreshAsync = lib!.XCASH_Wallet_refreshAsync(ptr);
   debugEnd?.call('XCASH_Wallet_refreshAsync');
   return refreshAsync;
@@ -2410,7 +2410,7 @@ void Wallet_refreshAsync(wallet ptr) {
 
 bool Wallet_rescanBlockchain(wallet ptr) {
   debugStart?.call('XCASH_Wallet_rescanBlockchain');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final rescanBlockchain = lib!.XCASH_Wallet_rescanBlockchain(ptr);
   debugEnd?.call('XCASH_Wallet_rescanBlockchain');
   return rescanBlockchain;
@@ -2418,7 +2418,7 @@ bool Wallet_rescanBlockchain(wallet ptr) {
 
 void Wallet_rescanBlockchainAsync(wallet ptr) {
   debugStart?.call('XCASH_Wallet_rescanBlockchainAsync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final rescanBlockchainAsync = lib!.XCASH_Wallet_rescanBlockchainAsync(ptr);
   debugEnd?.call('XCASH_Wallet_rescanBlockchainAsync');
   return rescanBlockchainAsync;
@@ -2426,7 +2426,7 @@ void Wallet_rescanBlockchainAsync(wallet ptr) {
 
 void Wallet_setAutoRefreshInterval(wallet ptr, {required int millis}) {
   debugStart?.call('XCASH_Wallet_setAutoRefreshInterval');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final setAutoRefreshInterval =
       lib!.XCASH_Wallet_setAutoRefreshInterval(ptr, millis);
   debugEnd?.call('XCASH_Wallet_setAutoRefreshInterval');
@@ -2435,7 +2435,7 @@ void Wallet_setAutoRefreshInterval(wallet ptr, {required int millis}) {
 
 int Wallet_autoRefreshInterval(wallet ptr) {
   debugStart?.call('XCASH_Wallet_autoRefreshInterval');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final autoRefreshInterval = lib!.XCASH_Wallet_autoRefreshInterval(ptr);
   debugEnd?.call('XCASH_Wallet_autoRefreshInterval');
   return autoRefreshInterval;
@@ -2444,7 +2444,7 @@ int Wallet_autoRefreshInterval(wallet ptr) {
 void Wallet_addSubaddress(wallet ptr,
     {required int accountIndex, String label = ""}) {
   debugStart?.call('XCASH_Wallet_addSubaddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final label_ = label.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_addSubaddress(ptr, accountIndex, label_);
@@ -2455,7 +2455,7 @@ void Wallet_addSubaddress(wallet ptr,
 
 void Wallet_addSubaddressAccount(wallet ptr, {String label = ""}) {
   debugStart?.call('XCASH_Wallet_addSubaddressAccount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final label_ = label.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_addSubaddressAccount(ptr, label_);
@@ -2466,7 +2466,7 @@ void Wallet_addSubaddressAccount(wallet ptr, {String label = ""}) {
 
 int Wallet_numSubaddressAccounts(wallet ptr) {
   debugStart?.call('XCASH_Wallet_numSubaddressAccounts');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final numSubaddressAccounts = lib!.XCASH_Wallet_numSubaddressAccounts(ptr);
   debugEnd?.call('XCASH_Wallet_numSubaddressAccounts');
   return numSubaddressAccounts;
@@ -2474,7 +2474,7 @@ int Wallet_numSubaddressAccounts(wallet ptr) {
 
 int Wallet_numSubaddresses(wallet ptr, {required int accountIndex}) {
   debugStart?.call('XCASH_Wallet_numSubaddresses');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final numSubaddresses = lib!.XCASH_Wallet_numSubaddresses(ptr, accountIndex);
   debugEnd?.call('XCASH_Wallet_numSubaddresses');
   return numSubaddresses;
@@ -2483,7 +2483,7 @@ int Wallet_numSubaddresses(wallet ptr, {required int accountIndex}) {
 String Wallet_getSubaddressLabel(wallet ptr,
     {required int accountIndex, required int addressIndex}) {
   debugStart?.call('XCASH_Wallet_getSubaddressLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_Wallet_getSubaddressLabel(ptr, accountIndex, addressIndex)
@@ -2504,7 +2504,7 @@ void Wallet_setSubaddressLabel(wallet ptr,
     required int addressIndex,
     required String label}) {
   debugStart?.call('XCASH_Wallet_setSubaddressLabel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final label_ = label.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_setSubaddressLabel(
@@ -2516,7 +2516,7 @@ void Wallet_setSubaddressLabel(wallet ptr,
 
 MultisigState Wallet_multisig(wallet ptr) {
   debugStart?.call('XCASH_Wallet_multisig');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_Wallet_multisig(ptr);
   debugEnd?.call('XCASH_Wallet_multisig');
   return s;
@@ -2524,7 +2524,7 @@ MultisigState Wallet_multisig(wallet ptr) {
 
 String Wallet_getMultisigInfo(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getMultisigInfo');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_Wallet_getMultisigInfo(ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -2544,7 +2544,7 @@ String Wallet_makeMultisig(
   required int threshold,
 }) {
   debugStart?.call('XCASH_Wallet_makeMultisig');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final infoStr = info.join(defaultSeparatorStr).toNativeUtf8();
     final strPtr = lib!
@@ -2573,7 +2573,7 @@ String Wallet_exchangeMultisigKeys(
   required bool force_update_use_with_caution,
 }) {
   debugStart?.call('XCASH_Wallet_exchangeMultisigKeys');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final infoStr = info.join(defaultSeparatorStr).toNativeUtf8();
     final strPtr = lib!
@@ -2602,7 +2602,7 @@ List<String> Wallet_exportMultisigImages(
   required bool force_update_use_with_caution,
 }) {
   debugStart?.call('XCASH_Wallet_exportMultisigImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final infoStr = info.join(defaultSeparatorStr).toNativeUtf8();
     final strPtr = lib!
@@ -2628,7 +2628,7 @@ int Wallet_importMultisigImages(
   required List<String> info,
 }) {
   debugStart?.call('XCASH_Wallet_importMultisigImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final infoStr = info.join(defaultSeparatorStr).toNativeUtf8();
   final ret = lib!.XCASH_Wallet_importMultisigImages(
     ptr,
@@ -2642,7 +2642,7 @@ int Wallet_importMultisigImages(
 
 int Wallet_hasMultisigPartialKeyImages(wallet ptr) {
   debugStart?.call('XCASH_Wallet_hasMultisigPartialKeyImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_hasMultisigPartialKeyImages(
     ptr,
   );
@@ -2655,7 +2655,7 @@ PendingTransaction Wallet_restoreMultisigTransaction(
   required String signData,
 }) {
   debugStart?.call('XCASH_Wallet_restoreMultisigTransaction');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final signData_ = signData.toNativeUtf8();
   final ret = lib!.XCASH_Wallet_restoreMultisigTransaction(
     ptr,
@@ -2678,7 +2678,7 @@ PendingTransaction Wallet_createTransactionMultDest(
   List<String> preferredInputs = const [],
 }) {
   debugStart?.call('XCASH_Wallet_createTransactionMultDest');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final dst_addr_list = dstAddr.join(defaultSeparatorStr).toNativeUtf8();
   final payment_id = paymentId.toNativeUtf8();
   final amount_list =
@@ -2716,7 +2716,7 @@ PendingTransaction Wallet_createTransaction(wallet ptr,
     required int subaddr_account,
     List<String> preferredInputs = const []}) {
   debugStart?.call('XCASH_Wallet_createTransaction');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final dst_addr_ = dst_addr.toNativeUtf8().cast<Char>();
   final payment_id_ = payment_id.toNativeUtf8().cast<Char>();
@@ -2743,7 +2743,7 @@ PendingTransaction Wallet_createTransaction(wallet ptr,
 UnsignedTransaction Wallet_loadUnsignedTx(wallet ptr,
     {required String unsigned_filename}) {
   debugStart?.call('XCASH_Wallet_loadUnsignedTx');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final unsigned_filename_ = unsigned_filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_loadUnsignedTx(ptr, unsigned_filename_);
@@ -2755,7 +2755,7 @@ UnsignedTransaction Wallet_loadUnsignedTx(wallet ptr,
 UnsignedTransaction Wallet_loadUnsignedTxUR(wallet ptr,
     {required String input}) {
   debugStart?.call('XCASH_Wallet_loadUnsignedTxUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final input_ = input.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_loadUnsignedTxUR(ptr, input_);
@@ -2766,7 +2766,7 @@ UnsignedTransaction Wallet_loadUnsignedTxUR(wallet ptr,
 
 bool Wallet_submitTransaction(wallet ptr, String filename) {
   debugStart?.call('XCASH_Wallet_submitTransaction');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_submitTransaction(ptr, filename_);
@@ -2777,7 +2777,7 @@ bool Wallet_submitTransaction(wallet ptr, String filename) {
 
 bool Wallet_submitTransactionUR(wallet ptr, String input) {
   debugStart?.call('XCASH_Wallet_submitTransactionUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final input_ = input.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_submitTransactionUR(ptr, input_);
@@ -2788,7 +2788,7 @@ bool Wallet_submitTransactionUR(wallet ptr, String input) {
 
 bool Wallet_hasUnknownKeyImages(wallet ptr) {
   debugStart?.call('XCASH_Wallet_hasUnknownKeyImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_Wallet_hasUnknownKeyImages(ptr);
   debugEnd?.call('XCASH_Wallet_hasUnknownKeyImages');
   return s;
@@ -2796,7 +2796,7 @@ bool Wallet_hasUnknownKeyImages(wallet ptr) {
 
 bool Wallet_exportKeyImages(wallet ptr, String filename, {required bool all}) {
   debugStart?.call('XCASH_Wallet_exportKeyImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_exportKeyImages(ptr, filename_, all);
@@ -2811,7 +2811,7 @@ String Wallet_exportKeyImagesUR(
   bool all = false,
 }) {
   debugStart?.call('XCASH_Wallet_exportKeyImagesUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_Wallet_exportKeyImagesUR(ptr, max_fragment_length, all)
@@ -2829,7 +2829,7 @@ String Wallet_exportKeyImagesUR(
 
 bool Wallet_importKeyImages(wallet ptr, String filename) {
   debugStart?.call('XCASH_Wallet_importKeyImages');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_importKeyImages(ptr, filename_);
@@ -2840,7 +2840,7 @@ bool Wallet_importKeyImages(wallet ptr, String filename) {
 
 bool Wallet_importKeyImagesUR(wallet ptr, String input) {
   debugStart?.call('XCASH_Wallet_importKeyImagesUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final input_ = input.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_importKeyImagesUR(ptr, input_);
@@ -2851,7 +2851,7 @@ bool Wallet_importKeyImagesUR(wallet ptr, String input) {
 
 bool Wallet_exportOutputs(wallet ptr, String filename, {required bool all}) {
   debugStart?.call('XCASH_Wallet_exportOutputs');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_exportOutputs(ptr, filename_, all);
@@ -2866,7 +2866,7 @@ String Wallet_exportOutputsUR(
   bool all = false,
 }) {
   debugStart?.call('XCASH_Wallet_exportOutputsUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_Wallet_exportOutputsUR(ptr, max_fragment_length, all)
@@ -2884,7 +2884,7 @@ String Wallet_exportOutputsUR(
 
 bool Wallet_importOutputs(wallet ptr, String filename) {
   debugStart?.call('XCASH_Wallet_importOutputs');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final filename_ = filename.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_importOutputs(ptr, filename_);
@@ -2895,7 +2895,7 @@ bool Wallet_importOutputs(wallet ptr, String filename) {
 
 bool Wallet_importOutputsUR(wallet ptr, String input) {
   debugStart?.call('XCASH_Wallet_importOutputsUR');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final input_ = input.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_Wallet_importOutputsUR(ptr, input_);
@@ -2911,7 +2911,7 @@ bool Wallet_setupBackgroundSync(
   required String backgroundCachePassword,
 }) {
   debugStart?.call('XCASH_Wallet_setupBackgroundSync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final walletPassword_ = walletPassword.toNativeUtf8().cast<Char>();
   final backgroundCachePassword_ =
@@ -2926,7 +2926,7 @@ bool Wallet_setupBackgroundSync(
 
 int Wallet_getBackgroundSyncType(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getBackgroundSyncType');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_getBackgroundSyncType(ptr);
   debugEnd?.call('XCASH_Wallet_getBackgroundSyncType');
   return v;
@@ -2934,7 +2934,7 @@ int Wallet_getBackgroundSyncType(wallet ptr) {
 
 bool Wallet_startBackgroundSync(wallet ptr) {
   debugStart?.call('XCASH_Wallet_startBackgroundSync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_startBackgroundSync(ptr);
   debugEnd?.call('XCASH_Wallet_startBackgroundSync');
   return v;
@@ -2942,7 +2942,7 @@ bool Wallet_startBackgroundSync(wallet ptr) {
 
 bool Wallet_stopBackgroundSync(wallet ptr, String walletPassword) {
   debugStart?.call('XCASH_Wallet_stopBackgroundSync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final walletPassword_ = walletPassword.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_Wallet_stopBackgroundSync(ptr, walletPassword_);
   calloc.free(walletPassword_);
@@ -2952,7 +2952,7 @@ bool Wallet_stopBackgroundSync(wallet ptr, String walletPassword) {
 
 bool Wallet_isBackgroundSyncing(wallet ptr) {
   debugStart?.call('XCASH_Wallet_isBackgroundSyncing');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_isBackgroundSyncing(ptr);
   debugEnd?.call('XCASH_Wallet_isBackgroundSyncing');
   return v;
@@ -2960,7 +2960,7 @@ bool Wallet_isBackgroundSyncing(wallet ptr) {
 
 bool Wallet_isBackgroundWallet(wallet ptr) {
   debugStart?.call('XCASH_Wallet_isBackgroundWallet');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_isBackgroundWallet(ptr);
   debugEnd?.call('XCASH_Wallet_isBackgroundWallet');
   return v;
@@ -2968,7 +2968,7 @@ bool Wallet_isBackgroundWallet(wallet ptr) {
 
 TransactionHistory Wallet_history(wallet ptr) {
   debugStart?.call('XCASH_Wallet_history');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final history = lib!.XCASH_Wallet_history(ptr);
   debugEnd?.call('XCASH_Wallet_history');
   return history;
@@ -2976,7 +2976,7 @@ TransactionHistory Wallet_history(wallet ptr) {
 
 AddressBook Wallet_addressBook(wallet ptr) {
   debugStart?.call('XCASH_Wallet_addressBook');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final history = lib!.XCASH_Wallet_addressBook(ptr);
   debugEnd?.call('XCASH_Wallet_addressBook');
   return history;
@@ -2984,7 +2984,7 @@ AddressBook Wallet_addressBook(wallet ptr) {
 
 AddressBook Wallet_coins(wallet ptr) {
   debugStart?.call('XCASH_Wallet_coins');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final history = lib!.XCASH_Wallet_coins(ptr);
   debugEnd?.call('XCASH_Wallet_coins');
   return history;
@@ -2992,7 +2992,7 @@ AddressBook Wallet_coins(wallet ptr) {
 
 AddressBook Wallet_subaddress(wallet ptr) {
   debugStart?.call('XCASH_Wallet_subaddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final history = lib!.XCASH_Wallet_subaddress(ptr);
   debugEnd?.call('XCASH_Wallet_subaddress');
   return history;
@@ -3000,7 +3000,7 @@ AddressBook Wallet_subaddress(wallet ptr) {
 
 AddressBook Wallet_subaddressAccount(wallet ptr) {
   debugStart?.call('XCASH_Wallet_subaddressAccount');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final history = lib!.XCASH_Wallet_subaddressAccount(ptr);
   debugEnd?.call('XCASH_Wallet_subaddressAccount');
   return history;
@@ -3008,7 +3008,7 @@ AddressBook Wallet_subaddressAccount(wallet ptr) {
 
 int Wallet_defaultMixin(wallet ptr) {
   debugStart?.call('XCASH_Wallet_defaultMixin');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_defaultMixin(ptr);
   debugEnd?.call('XCASH_Wallet_defaultMixin');
   return v;
@@ -3016,7 +3016,7 @@ int Wallet_defaultMixin(wallet ptr) {
 
 void Wallet_setDefaultMixin(wallet ptr, int arg) {
   debugStart?.call('XCASH_Wallet_setDefaultMixin');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_setDefaultMixin(ptr, arg);
   debugEnd?.call('XCASH_Wallet_setDefaultMixin');
   return v;
@@ -3025,7 +3025,7 @@ void Wallet_setDefaultMixin(wallet ptr, int arg) {
 bool Wallet_setCacheAttribute(wallet ptr,
     {required String key, required String value}) {
   debugStart?.call('XCASH_Wallet_setCacheAttribute');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final key_ = key.toNativeUtf8().cast<Char>();
   final value_ = value.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_Wallet_setCacheAttribute(ptr, key_, value_);
@@ -3037,7 +3037,7 @@ bool Wallet_setCacheAttribute(wallet ptr,
 
 String Wallet_getCacheAttribute(wallet ptr, {required String key}) {
   debugStart?.call('XCASH_Wallet_getCacheAttribute');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final key_ = key.toNativeUtf8().cast<Char>();
     final strPtr = lib!.XCASH_Wallet_getCacheAttribute(ptr, key_).cast<Utf8>();
@@ -3056,7 +3056,7 @@ String Wallet_getCacheAttribute(wallet ptr, {required String key}) {
 bool Wallet_setUserNote(wallet ptr,
     {required String txid, required String note}) {
   debugStart?.call('XCASH_Wallet_setUserNote');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final txid_ = txid.toNativeUtf8().cast<Char>();
   final note_ = note.toNativeUtf8().cast<Char>();
   final v = lib!.XCASH_Wallet_setUserNote(ptr, txid_, note_);
@@ -3068,7 +3068,7 @@ bool Wallet_setUserNote(wallet ptr,
 
 String Wallet_getUserNote(wallet ptr, {required String txid}) {
   debugStart?.call('XCASH_Wallet_getUserNote');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final txid_ = txid.toNativeUtf8().cast<Char>();
     final strPtr = lib!.XCASH_Wallet_getUserNote(ptr, txid_).cast<Utf8>();
@@ -3086,7 +3086,7 @@ String Wallet_getUserNote(wallet ptr, {required String txid}) {
 
 String Wallet_getTxKey(wallet ptr, {required String txid}) {
   debugStart?.call('XCASH_Wallet_getTxKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final txid_ = txid.toNativeUtf8().cast<Char>();
     final strPtr = lib!.XCASH_Wallet_getTxKey(ptr, txid_).cast<Utf8>();
@@ -3108,7 +3108,7 @@ String Wallet_signMessage(
   required String address,
 }) {
   debugStart?.call('XCASH_Wallet_signMessage');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final message_ = message.toNativeUtf8().cast<Char>();
     final address_ = address.toNativeUtf8().cast<Char>();
@@ -3134,7 +3134,7 @@ bool Wallet_verifySignedMessage(
   required String signature,
 }) {
   debugStart?.call('XCASH_Wallet_verifySignedMessage');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final message_ = message.toNativeUtf8().cast<Char>();
   final address_ = address.toNativeUtf8().cast<Char>();
   final signature_ = signature.toNativeUtf8().cast<Char>();
@@ -3149,7 +3149,7 @@ bool Wallet_verifySignedMessage(
 
 bool Wallet_rescanSpent(wallet ptr) {
   debugStart?.call('XCASH_Wallet_rescanSpent');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_rescanSpent(ptr);
   debugEnd?.call('XCASH_Wallet_rescanSpent');
   return v;
@@ -3157,7 +3157,7 @@ bool Wallet_rescanSpent(wallet ptr) {
 
 void Wallet_setOffline(wallet ptr, {required bool offline}) {
   debugStart?.call('XCASH_Wallet_setOffline');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final setOffline = lib!.XCASH_Wallet_setOffline(ptr, offline);
   debugEnd?.call('XCASH_Wallet_setOffline');
   return setOffline;
@@ -3165,7 +3165,7 @@ void Wallet_setOffline(wallet ptr, {required bool offline}) {
 
 bool Wallet_isOffline(wallet ptr) {
   debugStart?.call('XCASH_Wallet_isOffline');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final isOffline = lib!.XCASH_Wallet_isOffline(ptr);
   debugEnd?.call('XCASH_Wallet_isOffline');
   return isOffline;
@@ -3173,7 +3173,7 @@ bool Wallet_isOffline(wallet ptr) {
 
 void Wallet_segregatePreForkOutputs(wallet ptr, {required bool segregate}) {
   debugStart?.call('XCASH_Wallet_segregatePreForkOutputs');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_segregatePreForkOutputs(ptr, segregate);
   debugEnd?.call('XCASH_Wallet_segregatePreForkOutputs');
   return v;
@@ -3181,7 +3181,7 @@ void Wallet_segregatePreForkOutputs(wallet ptr, {required bool segregate}) {
 
 void Wallet_segregationHeight(wallet ptr, {required int height}) {
   debugStart?.call('XCASH_Wallet_segregationHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_segregationHeight(ptr, height);
   debugEnd?.call('XCASH_Wallet_segregationHeight');
   return v;
@@ -3189,7 +3189,7 @@ void Wallet_segregationHeight(wallet ptr, {required int height}) {
 
 void Wallet_keyReuseMitigation2(wallet ptr, {required bool mitigation}) {
   debugStart?.call('XCASH_Wallet_keyReuseMitigation2');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_keyReuseMitigation2(ptr, mitigation);
   debugEnd?.call('XCASH_Wallet_keyReuseMitigation2');
   return v;
@@ -3197,7 +3197,7 @@ void Wallet_keyReuseMitigation2(wallet ptr, {required bool mitigation}) {
 
 bool Wallet_lockKeysFile(wallet ptr) {
   debugStart?.call('XCASH_Wallet_lockKeysFile');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_lockKeysFile(ptr);
   debugEnd?.call('XCASH_Wallet_lockKeysFile');
   return v;
@@ -3205,7 +3205,7 @@ bool Wallet_lockKeysFile(wallet ptr) {
 
 bool Wallet_unlockKeysFile(wallet ptr) {
   debugStart?.call('XCASH_Wallet_unlockKeysFile');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_unlockKeysFile(ptr);
   debugEnd?.call('XCASH_Wallet_unlockKeysFile');
   return v;
@@ -3213,7 +3213,7 @@ bool Wallet_unlockKeysFile(wallet ptr) {
 
 bool Wallet_isKeysFileLocked(wallet ptr) {
   debugStart?.call('XCASH_Wallet_isKeysFileLocked');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_isKeysFileLocked(ptr);
   debugEnd?.call('XCASH_Wallet_isKeysFileLocked');
   return v;
@@ -3221,7 +3221,7 @@ bool Wallet_isKeysFileLocked(wallet ptr) {
 
 int Wallet_getDeviceType(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getDeviceType');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_getDeviceType(ptr);
   debugEnd?.call('XCASH_Wallet_getDeviceType');
   return v;
@@ -3230,7 +3230,7 @@ int Wallet_getDeviceType(wallet ptr) {
 int Wallet_coldKeyImageSync(wallet ptr,
     {required int spent, required int unspent}) {
   debugStart?.call('XCASH_Wallet_coldKeyImageSync');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final v = lib!.XCASH_Wallet_coldKeyImageSync(ptr, spent, unspent);
   debugEnd?.call('XCASH_Wallet_coldKeyImageSync');
   return v;
@@ -3239,7 +3239,7 @@ int Wallet_coldKeyImageSync(wallet ptr,
 String Wallet_deviceShowAddress(wallet ptr,
     {required int accountIndex, required int addressIndex}) {
   debugStart?.call('XCASH_Wallet_deviceShowAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!
         .XCASH_Wallet_deviceShowAddress(ptr, accountIndex, addressIndex)
@@ -3257,7 +3257,7 @@ String Wallet_deviceShowAddress(wallet ptr,
 
 bool Wallet_reconnectDevice(wallet ptr) {
   debugStart?.call('XCASH_Wallet_reconnectDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_reconnectDevice(ptr);
   debugEnd?.call('XCASH_Wallet_reconnectDevice');
   return ret;
@@ -3265,7 +3265,7 @@ bool Wallet_reconnectDevice(wallet ptr) {
 
 int Wallet_getBytesReceived(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getBytesReceived');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final getBytesReceived = lib!.XCASH_Wallet_getBytesReceived(ptr);
   debugEnd?.call('XCASH_Wallet_getBytesReceived');
   return getBytesReceived;
@@ -3273,7 +3273,7 @@ int Wallet_getBytesReceived(wallet ptr) {
 
 int XCASH_Wallet_getBytesSent(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getBytesSent');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final getBytesSent = lib!.XCASH_Wallet_getBytesSent(ptr);
   debugEnd?.call('XCASH_Wallet_getBytesSent');
   return getBytesSent;
@@ -3281,7 +3281,7 @@ int XCASH_Wallet_getBytesSent(wallet ptr) {
 
 bool Wallet_getStateIsConnected(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getStateIsConnected');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getStateIsConnected(ptr);
   debugEnd?.call('XCASH_Wallet_getStateIsConnected');
   return ret;
@@ -3289,7 +3289,7 @@ bool Wallet_getStateIsConnected(wallet ptr) {
 
 Pointer<UnsignedChar> Wallet_getSendToDevice(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getSendToDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getSendToDevice(ptr);
   debugEnd?.call('XCASH_Wallet_getSendToDevice');
   return ret;
@@ -3297,7 +3297,7 @@ Pointer<UnsignedChar> Wallet_getSendToDevice(wallet ptr) {
 
 int Wallet_getSendToDeviceLength(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getSendToDeviceLength');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getSendToDeviceLength(ptr);
   debugEnd?.call('XCASH_Wallet_getSendToDeviceLength');
   return ret;
@@ -3305,7 +3305,7 @@ int Wallet_getSendToDeviceLength(wallet ptr) {
 
 Pointer<UnsignedChar> Wallet_getReceivedFromDevice(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getReceivedFromDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getReceivedFromDevice(ptr);
   debugEnd?.call('XCASH_Wallet_getReceivedFromDevice');
   return ret;
@@ -3313,7 +3313,7 @@ Pointer<UnsignedChar> Wallet_getReceivedFromDevice(wallet ptr) {
 
 int Wallet_getReceivedFromDeviceLength(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getReceivedFromDeviceLength');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getReceivedFromDeviceLength(ptr);
   debugEnd?.call('XCASH_Wallet_getReceivedFromDeviceLength');
   return ret;
@@ -3321,7 +3321,7 @@ int Wallet_getReceivedFromDeviceLength(wallet ptr) {
 
 bool Wallet_getWaitsForDeviceSend(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getWaitsForDeviceSend');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getWaitsForDeviceSend(ptr);
   debugEnd?.call('XCASH_Wallet_getWaitsForDeviceSend');
   return ret;
@@ -3329,7 +3329,7 @@ bool Wallet_getWaitsForDeviceSend(wallet ptr) {
 
 bool Wallet_getWaitsForDeviceReceive(wallet ptr) {
   debugStart?.call('XCASH_Wallet_getWaitsForDeviceReceive');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_getWaitsForDeviceReceive(ptr);
   debugEnd?.call('XCASH_Wallet_getWaitsForDeviceReceive');
   return ret;
@@ -3338,7 +3338,7 @@ bool Wallet_getWaitsForDeviceReceive(wallet ptr) {
 void Wallet_setDeviceReceivedData(
     wallet ptr, Pointer<UnsignedChar> data, int len) {
   debugStart?.call('XCASH_Wallet_setDeviceReceivedData');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_setDeviceReceivedData(ptr, data, len);
   debugEnd?.call('XCASH_Wallet_setDeviceReceivedData');
   return ret;
@@ -3346,7 +3346,7 @@ void Wallet_setDeviceReceivedData(
 
 void Wallet_setDeviceSendData(wallet ptr, Pointer<UnsignedChar> data, int len) {
   debugStart?.call('XCASH_Wallet_setDeviceSendData');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final ret = lib!.XCASH_Wallet_setDeviceSendData(ptr, data, len);
   debugEnd?.call('XCASH_Wallet_setDeviceSendData');
   return ret;
@@ -3364,7 +3364,7 @@ wallet WalletManager_createWallet(
   int networkType = 0,
 }) {
   debugStart?.call('XCASH_WalletManager_createWallet');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final language_ = language.toNativeUtf8().cast<Char>();
@@ -3384,7 +3384,7 @@ wallet WalletManager_openWallet(
   int networkType = 0,
 }) {
   debugStart?.call('XCASH_WalletManager_openWallet');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final w = lib!
@@ -3406,7 +3406,7 @@ wallet WalletManager_recoveryWallet(
   required String seedOffset,
 }) {
   debugStart?.call('XCASH_WalletManager_recoveryWallet');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final mnemonic_ = mnemonic.toNativeUtf8().cast<Char>();
@@ -3433,7 +3433,7 @@ wallet WalletManager_createWalletFromKeys(
   required String spendKeyString,
   int kdf_rounds = 1,
 }) {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   debugStart?.call('XCASH_WalletManager_createWalletFromKeys');
 
   final path_ = path.toNativeUtf8().cast<Char>();
@@ -3478,7 +3478,7 @@ wallet WalletManager_createDeterministicWalletFromSpendKey(
 }) {
   debugStart
       ?.call('XCASH_WalletManager_createDeterministicWalletFromSpendKey');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final language_ = language.toNativeUtf8().cast<Char>();
@@ -3511,7 +3511,7 @@ wallet WalletManager_createWalletFromDevice(
   int kdfRounds = 1,
 }) {
   debugStart?.call('XCASH_WalletManager_createWalletFromDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final deviceName_ = deviceName.toNativeUtf8().cast<Char>();
@@ -3547,7 +3547,7 @@ wallet WalletManager_createWalletFromPolyseed(
   required int kdfRounds,
 }) {
   debugStart?.call('XCASH_WalletManager_createWalletFromPolyseed');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final mnemonic_ = mnemonic.toNativeUtf8().cast<Char>();
@@ -3572,7 +3572,7 @@ wallet WalletManager_createWalletFromPolyseed(
 
 bool WalletManager_closeWallet(WalletManager wm_ptr, wallet ptr, bool store) {
   debugStart?.call('XCASH_WalletManager_closeWallet');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final closeWallet = lib!.XCASH_WalletManager_closeWallet(wm_ptr, ptr, store);
   debugEnd?.call('XCASH_WalletManager_closeWallet');
   return closeWallet;
@@ -3580,7 +3580,7 @@ bool WalletManager_closeWallet(WalletManager wm_ptr, wallet ptr, bool store) {
 
 bool WalletManager_walletExists(WalletManager wm_ptr, String path) {
   debugStart?.call('XCASH_WalletManager_walletExists');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final path_ = path.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_walletExists(wm_ptr, path_);
   calloc.free(path_);
@@ -3596,7 +3596,7 @@ bool WalletManager_verifyWalletPassword(
   required int kdfRounds,
 }) {
   debugStart?.call('XCASH_WalletManager_verifyWalletPassword');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final keysFileName_ = keysFileName.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_verifyWalletPassword(
@@ -3614,7 +3614,7 @@ int WalletManager_queryWalletDevice(
       required int kdfRounds,
     }) {
   debugStart?.call('XCASH_WalletManager_queryWalletDevice');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final keysFileName_ = keysFileName.toNativeUtf8().cast<Char>();
   final password_ = password.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_queryWalletDevice(
@@ -3628,7 +3628,7 @@ int WalletManager_queryWalletDevice(
 List<String> WalletManager_findWallets(WalletManager wm_ptr,
     {required String path}) {
   debugStart?.call('XCASH_WalletManager_findWallets');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final path_ = path.toNativeUtf8().cast<Char>();
     final strPtr = lib!
@@ -3650,7 +3650,7 @@ List<String> WalletManager_findWallets(WalletManager wm_ptr,
 
 String WalletManager_errorString(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_errorString');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final strPtr = lib!.XCASH_WalletManager_errorString(wm_ptr).cast<Utf8>();
     final str = strPtr.toDartString();
@@ -3666,7 +3666,7 @@ String WalletManager_errorString(WalletManager wm_ptr) {
 
 void WalletManager_setDaemonAddress(WalletManager wm_ptr, String address) {
   debugStart?.call('XCASH_WalletManager_setDaemonAddress');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_setDaemonAddress(wm_ptr, address_);
@@ -3677,7 +3677,7 @@ void WalletManager_setDaemonAddress(WalletManager wm_ptr, String address) {
 
 int WalletManager_blockchainHeight(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_blockchainHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_blockchainHeight(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_blockchainHeight');
   return s;
@@ -3685,7 +3685,7 @@ int WalletManager_blockchainHeight(WalletManager wm_ptr) {
 
 int WalletManager_blockchainTargetHeight(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_blockchainTargetHeight');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_blockchainTargetHeight(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_blockchainTargetHeight');
   return s;
@@ -3693,7 +3693,7 @@ int WalletManager_blockchainTargetHeight(WalletManager wm_ptr) {
 
 int WalletManager_networkDifficulty(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_networkDifficulty');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_networkDifficulty(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_networkDifficulty');
   return s;
@@ -3701,7 +3701,7 @@ int WalletManager_networkDifficulty(WalletManager wm_ptr) {
 
 double WalletManager_miningHashRate(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_miningHashRate');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_miningHashRate(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_miningHashRate');
   return s;
@@ -3709,7 +3709,7 @@ double WalletManager_miningHashRate(WalletManager wm_ptr) {
 
 int WalletManager_blockTarget(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_blockTarget');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_blockTarget(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_blockTarget');
   return s;
@@ -3717,7 +3717,7 @@ int WalletManager_blockTarget(WalletManager wm_ptr) {
 
 bool WalletManager_isMining(WalletManager wm_ptr) {
   debugStart?.call('XCASH_WalletManager_isMining');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManager_isMining(wm_ptr);
   debugEnd?.call('XCASH_WalletManager_isMining');
   return s;
@@ -3731,7 +3731,7 @@ bool WalletManager_startMining(
   required bool ignoreBattery,
 }) {
   debugStart?.call('XCASH_WalletManager_startMining');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_startMining(
       wm_ptr, address_, threads, backgroundMining, ignoreBattery);
@@ -3742,7 +3742,7 @@ bool WalletManager_startMining(
 
 bool WalletManager_stopMining(WalletManager wm_ptr, String address) {
   debugStart?.call('XCASH_WalletManager_stopMining');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_stopMining(wm_ptr, address_);
   calloc.free(address_);
@@ -3756,7 +3756,7 @@ String WalletManager_resolveOpenAlias(
   required bool dnssecValid,
 }) {
   debugStart?.call('XCASH_WalletManager_resolveOpenAlias');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   try {
     final address_ = address.toNativeUtf8().cast<Char>();
     final strPtr = lib!
@@ -3776,7 +3776,7 @@ String WalletManager_resolveOpenAlias(
 
 bool WalletManager_setProxy(WalletManager wm_ptr, String address) {
   debugStart?.call('XCASH_WalletManager_setProxy');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final address_ = address.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManager_setProxy(wm_ptr, address_);
@@ -3787,7 +3787,7 @@ bool WalletManager_setProxy(WalletManager wm_ptr, String address) {
 
 void WalletManagerFactory_setLogLevel(int level) {
   debugStart?.call('XCASH_WalletManagerFactory_setLogLevel');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManagerFactory_setLogLevel(level);
   debugEnd?.call('XCASH_WalletManagerFactory_setLogLevel');
   return s;
@@ -3795,7 +3795,7 @@ void WalletManagerFactory_setLogLevel(int level) {
 
 void WalletManagerFactory_setLogCategories(String categories) {
   debugStart?.call('XCASH_WalletManagerFactory_setLogCategories');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final categories_ = categories.toNativeUtf8().cast<Char>();
   final s = lib!.XCASH_WalletManagerFactory_setLogCategories(categories_);
   calloc.free(categories_);
@@ -3805,7 +3805,7 @@ void WalletManagerFactory_setLogCategories(String categories) {
 
 WalletManager WalletManagerFactory_getWalletManager() {
   debugStart?.call('XCASH_WalletManagerFactory_getWalletManager');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   final s = lib!.XCASH_WalletManagerFactory_getWalletManager();
   debugEnd?.call('XCASH_WalletManagerFactory_getWalletManager');
   return s;
@@ -3892,7 +3892,7 @@ class libOk {
 }
 
 libOk isLibOk() {
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
   lib!.XCASH_DEBUG_test0();
   final test1 = lib!.XCASH_DEBUG_test1(true);
   final test2 = lib!.XCASH_DEBUG_test2(-1);
@@ -3909,7 +3909,7 @@ typedef WalletListener = Pointer<Void>;
 
 WalletListener XCASH_cw_getWalletListener(wallet wptr) {
   debugStart?.call('XCASH_cw_getWalletListener');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_getWalletListener(wptr);
   debugEnd?.call('XCASH_cw_getWalletListener');
@@ -3918,7 +3918,7 @@ WalletListener XCASH_cw_getWalletListener(wallet wptr) {
 
 void XCASH_cw_WalletListener_resetNeedToRefresh(WalletListener wlptr) {
   debugStart?.call('XCASH_cw_WalletListener_resetNeedToRefresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_WalletListener_resetNeedToRefresh(wlptr);
   debugEnd?.call('XCASH_cw_WalletListener_resetNeedToRefresh');
@@ -3927,7 +3927,7 @@ void XCASH_cw_WalletListener_resetNeedToRefresh(WalletListener wlptr) {
 
 bool XCASH_cw_WalletListener_isNeedToRefresh(WalletListener wlptr) {
   debugStart?.call('XCASH_cw_WalletListener_isNeedToRefresh');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_WalletListener_isNeedToRefresh(wlptr);
   debugEnd?.call('XCASH_cw_WalletListener_isNeedToRefresh');
@@ -3936,7 +3936,7 @@ bool XCASH_cw_WalletListener_isNeedToRefresh(WalletListener wlptr) {
 
 bool XCASH_cw_WalletListener_isNewTransactionExist(WalletListener wlptr) {
   debugStart?.call('XCASH_cw_WalletListener_isNewTransactionExist');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_WalletListener_isNewTransactionExist(wlptr);
   debugEnd?.call('XCASH_cw_WalletListener_isNewTransactionExist');
@@ -3945,7 +3945,7 @@ bool XCASH_cw_WalletListener_isNewTransactionExist(WalletListener wlptr) {
 
 void XCASH_cw_WalletListener_resetIsNewTransactionExist(WalletListener wlptr) {
   debugStart?.call('XCASH_cw_WalletListener_resetIsNewTransactionExist');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_WalletListener_resetIsNewTransactionExist(wlptr);
   debugEnd?.call('XCASH_cw_WalletListener_resetIsNewTransactionExist');
@@ -3954,7 +3954,7 @@ void XCASH_cw_WalletListener_resetIsNewTransactionExist(WalletListener wlptr) {
 
 int XCASH_cw_WalletListener_height(WalletListener wlptr) {
   debugStart?.call('XCASH_cw_WalletListener_height');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_cw_WalletListener_height(wlptr);
   debugEnd?.call('XCASH_cw_WalletListener_height');
@@ -3963,7 +3963,7 @@ int XCASH_cw_WalletListener_height(WalletListener wlptr) {
 
 String XCASH_checksum_wallet2_api_c_h() {
   debugStart?.call('XCASH_checksum_wallet2_api_c_h');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_checksum_wallet2_api_c_h();
   debugEnd?.call('XCASH_checksum_wallet2_api_c_h');
@@ -3972,7 +3972,7 @@ String XCASH_checksum_wallet2_api_c_h() {
 
 String XCASH_checksum_wallet2_api_c_cpp() {
   debugStart?.call('XCASH_checksum_wallet2_api_c_cpp');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_checksum_wallet2_api_c_cpp();
   debugEnd?.call('XCASH_checksum_wallet2_api_c_cpp');
@@ -3981,7 +3981,7 @@ String XCASH_checksum_wallet2_api_c_cpp() {
 
 String XCASH_checksum_wallet2_api_c_exp() {
   debugStart?.call('XCASH_checksum_wallet2_api_c_exp');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_checksum_wallet2_api_c_exp();
   debugEnd?.call('XCASH_checksum_wallet2_api_c_exp');
@@ -3990,7 +3990,7 @@ String XCASH_checksum_wallet2_api_c_exp() {
 
 void XCASH_free(Pointer<Void> wlptr) {
   debugStart?.call('XCASH_free');
-  lib ??= MoneroC(DynamicLibrary.open(libPath));
+  lib ??= XcashC(DynamicLibrary.open(libPath));
 
   final s = lib!.XCASH_free(wlptr);
   debugEnd?.call('XCASH_free');
