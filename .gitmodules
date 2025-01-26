@@ -35,6 +35,3 @@
 [submodule "external/libexpat"]
 	path = external/libexpat
 	url = https://github.com/libexpat/libexpat.git
-[submodule "xcash"]
-	path = xcash
-	url = https://github.com/farmage/monero-xcash
