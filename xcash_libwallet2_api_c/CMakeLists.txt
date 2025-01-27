@@ -146,9 +146,9 @@ else()
         ${EXTERNAL_LIBS_DIR}/lib/libpolyseed.a)
 endif()
 
-add_library(polyseed-wrapper STATIC IMPORTED)
-set_target_properties(polyseed-wrapper PROPERTIES IMPORTED_LOCATION
-    ${XCASH_DIR}/build/${HOST_ABI}/src/polyseed/libpolyseed_wrapper.a)
+# add_library(polyseed-wrapper STATIC IMPORTED)
+# set_target_properties(polyseed-wrapper PROPERTIES IMPORTED_LOCATION
+#     ${XCASH_DIR}/build/${HOST_ABI}/src/polyseed/libpolyseed_wrapper.a)
 
 if(${HOST_ABI} STREQUAL "x86_64-w64-mingw32" OR ${HOST_ABI} STREQUAL "i686-w64-mingw32")
     set(EXTRA_LIBS_POLYSEED polyseed-win)
@@ -178,17 +178,17 @@ endif()
 # Utf8proc
 #############
 
-add_library(utf8proc STATIC IMPORTED)
-set_target_properties(utf8proc PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/external/utf8proc/libutf8proc.a)
+# add_library(utf8proc STATIC IMPORTED)
+# set_target_properties(utf8proc PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/external/utf8proc/libutf8proc.a)
 
 #############
 # bc-ur
 #############
 
-add_library(bc-ur STATIC IMPORTED)
-set_target_properties(bc-ur PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/external/bc-ur/libbc-ur.a)
+# add_library(bc-ur STATIC IMPORTED)
+# set_target_properties(bc-ur PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/external/bc-ur/libbc-ur.a)
 
 
 #############
@@ -263,9 +263,9 @@ add_library(device STATIC IMPORTED)
 set_target_properties(device PROPERTIES IMPORTED_LOCATION
         ${XCASH_DIR}/build/${HOST_ABI}/src/device/libdevice.a)
 
-add_library(device_trezor STATIC IMPORTED)
-set_target_properties(device_trezor PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/src/device_trezor/libdevice_trezor.a)
+# add_library(device_trezor STATIC IMPORTED)
+# set_target_properties(device_trezor PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/src/device_trezor/libdevice_trezor.a)
 
 add_library(multisig STATIC IMPORTED)
 set_target_properties(multisig PROPERTIES IMPORTED_LOCATION
@@ -275,13 +275,13 @@ add_library(version STATIC IMPORTED)
 set_target_properties(version PROPERTIES IMPORTED_LOCATION
     ${XCASH_DIR}/build/${HOST_ABI}/src/libversion.a)
 
-add_library(net STATIC IMPORTED)
-set_target_properties(net PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/src/net/libnet.a)
+# add_library(net STATIC IMPORTED)
+# set_target_properties(net PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/src/net/libnet.a)
 
-add_library(hardforks STATIC IMPORTED)
-set_target_properties(hardforks PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/src/hardforks/libhardforks.a)
+# add_library(hardforks STATIC IMPORTED)
+# set_target_properties(hardforks PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/src/hardforks/libhardforks.a)
 
 if (${MONERO_FLAVOR} STREQUAL "xcash")
     set(RANDOMX_FLAVOR "randomx")
@@ -289,22 +289,22 @@ elseif(${MONERO_FLAVOR} STREQUAL "wownero")
     set(RANDOMX_FLAVOR "randomwow")
 endif()
 
-add_library(randomx STATIC IMPORTED)
-set_target_properties(randomx PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/external/${RANDOMX_FLAVOR}/librandomx.a)
+# add_library(randomx STATIC IMPORTED)
+# set_target_properties(randomx PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/external/${RANDOMX_FLAVOR}/librandomx.a)
 
-add_library(rpc_base STATIC IMPORTED)
-set_target_properties(rpc_base PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/src/rpc/librpc_base.a)
+# add_library(rpc_base STATIC IMPORTED)
+# set_target_properties(rpc_base PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/src/rpc/librpc_base.a)
 
 # TODO(mrcyjanek): fix (x86_64 maybe?)
 add_library(wallet-crypto STATIC IMPORTED)
 set_target_properties(wallet-crypto PROPERTIES IMPORTED_LOCATION
         ${XCASH_DIR}/build/${HOST_ABI}/src/crypto/wallet/libwallet-crypto.a)
 
-add_library(cryptonote_format_utils_basic STATIC IMPORTED)
-set_target_properties(cryptonote_format_utils_basic PROPERTIES IMPORTED_LOCATION
-        ${XCASH_DIR}/build/${HOST_ABI}/src/cryptonote_basic/libcryptonote_format_utils_basic.a)
+# add_library(cryptonote_format_utils_basic STATIC IMPORTED)
+# set_target_properties(cryptonote_format_utils_basic PROPERTIES IMPORTED_LOCATION
+#         ${XCASH_DIR}/build/${HOST_ABI}/src/cryptonote_basic/libcryptonote_format_utils_basic.a)
 
 add_library(hidapi STATIC IMPORTED)
 set_target_properties(hidapi PROPERTIES IMPORTED_LOCATION
@@ -388,11 +388,11 @@ target_link_libraries(  wallet2_api_c
                         wallet
                         cryptonote_core
                         cryptonote_basic
-                        cryptonote_format_utils_basic
+                        # cryptonote_format_utils_basic
                         mnemonics
                         ringct
                         ringct_basic
-                        net
+                        # net
                         common
                         cncrypto
                         blockchain_db
@@ -403,12 +403,12 @@ target_link_libraries(  wallet2_api_c
                         blocks
                         checkpoints
                         device
-                        device_trezor
+                        # device_trezor
                         multisig
                         version
-                        randomx
-                        hardforks
-                        rpc_base
+                        # randomx
+                        # hardforks
+                        # rpc_base
                         ${EXTRA_LIBS}
 
                         boost_chrono
@@ -422,13 +422,13 @@ target_link_libraries(  wallet2_api_c
                         boost_thread
                         boost_wserialization
 
-                        polyseed
-                        polyseed-wrapper
+                        # polyseed
+                        # polyseed-wrapper
                         ${EXTRA_LIBS_POLYSEED}
                         ${EXTRA_LIBS_WOWNEROSEED}
-                        utf8proc
+                        # utf8proc
 
-                        ${BCUR_ENABLED}
+                        # ${BCUR_ENABLED}
 
                         ssl
                         crypto

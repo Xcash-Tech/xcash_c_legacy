@@ -1,4 +1,5 @@
 #!/bin/bash
+# set -x
 
 cd "$(realpath $(dirname $0))"
 
